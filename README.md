@@ -1,6 +1,6 @@
 # prexvis
 
-## The visualization frontend for the aalwines tool
+## A visualization frontend for the AalWiNes tool
 This project is based on code from the VisuAAL project (github:petergjoel/VisuAAL) by Peter G. Jensen.
 
 ## Requirements
