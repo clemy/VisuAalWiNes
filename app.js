@@ -4,8 +4,11 @@ const path = require('path');
 const http = require('http').createServer(app);
 const io = require('socket.io')(http);
 
-const modelsPath = path.join(__dirname, 'data', 'models');
-const binPath = path.join(__dirname, 'bin');
+console.log('prexvis - Visualization for AaalWiNes');
+console.log('  Version 0.1.0');
+
+const modelsPath = path.join(process.cwd(), 'data', 'models');
+const binPath = path.join(process.cwd(), 'bin');
 const models = require('./backend/models')(modelsPath, binPath, models => {
     io.emit('models', models);
 });
@@ -38,5 +41,6 @@ app.use(function(req, res) {
 });
 
 http.listen(3000, function() {
-    console.log('Listening on port 3000!');
+    console.log();
+    console.log('Start your browser and go to http://localhost:3000/');
 });

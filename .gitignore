@@ -1,1 +1,5 @@
 node_modules/
+
+# files from build
+/prexvis
+/prexvis-*.tgz
