@@ -3,7 +3,11 @@
 ## A visualization frontend for the AalWiNes tool
 This project is based on code from the VisuAAL project (github:petergjoel/VisuAAL) by Peter G. Jensen.
 
+## Quick Start
+Download a binary delivery under https://github.com/clemy/prexvis/releases
+
 ## Requirements
+Necessary if you do not use the binary delivery:
 
 ###  Node.js v13 
 <https://nodejs.org/>
