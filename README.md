@@ -43,6 +43,32 @@ chrome http://localhost:3000/
 | `./bin/aalwines`              | binary of AalWiNes tool |
 | `./bin/moped`                 | binary of moped tool |
 
+## Building a binary delivery package
+
+Building a package containing a binary delivery can easily be done with the command
+
+```bash
+npm run pack
+```
+
+The delivery package including aalwines, moped, sample data and the prexvis binary is in:
+
+`./prexvis-0.1.0.tgz`
+
+Beside the prexvis tool it includes everything necessary to run it: nodejs, aalwines, moped and sample data.
+
+Unpack it, run the binary and use your browser to go to http://localhost:3000/
+
+```bash
+tar -xzvf prexvis-0.1.0.tgz
+cd prexvis-0.1.0
+./prexvis
+
+# browse to http://localhost:3000/
+```
+
+Own sample data can be added in the directory `data/models`.
+
 ## Optional Requirements
 
 ### PM2 (optional)

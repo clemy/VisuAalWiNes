@@ -1,9 +1,12 @@
 {
   "name": "prexvis",
-  "version": "1.0.0",
-  "ürivate": true,
+  "version": "0.1.0",
+  "bin": "app.js",
+  "private": true,
   "scripts": {
-    "start": "node app.js"
+    "start": "node app.js",
+    "pack": "pkg package.json -t latest-linux-x64 && tar -czf prexvis-$npm_package_version.tgz --transform s/^/prexvis-$npm_package_version\\\\// bin data prexvis",
+    "clean": "rm -f prexvis prexvis-$npm_package_version.tgz"
   },
   "description": "Visualization for P-Rex",
   "main": "app.js",
@@ -22,5 +25,12 @@
     "socket.io": "^2.3.0",
     "tmp-promise": "^2.0.2"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "pkg": "^4.4.5"
+  },
+  "pkg": {
+    "assets": [
+      "static/**/*"
+    ]
+  }
 }
