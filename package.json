@@ -1,0 +1,26 @@
+{
+  "name": "prexvis",
+  "version": "1.0.0",
+  "ürivate": true,
+  "scripts": {
+    "start": "node app.js"
+  },
+  "description": "Visualization for P-Rex",
+  "main": "app.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/clemy/prexvis.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/clemy/prexvis/issues"
+  },
+  "homepage": "https://github.com/clemy/prexvis#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "socket.io": "^2.3.0",
+    "tmp-promise": "^2.0.2"
+  },
+  "devDependencies": {}
+}

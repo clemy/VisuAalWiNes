@@ -1,0 +1,42 @@
+const express = require('express');
+const app = express();
+const path = require('path');
+const http = require('http').createServer(app);
+const io = require('socket.io')(http);
+
+const modelsPath = path.join(__dirname, 'data', 'models');
+const binPath = path.join(__dirname, 'bin');
+const models = require('./backend/models')(modelsPath, binPath, models => {
+    io.emit('models', models);
+});
+
+app.use(express.static(path.join(__dirname, 'static')));
+
+io.on('connect', (socket) => {
+    socket.on('getModelData', async (name) => {
+        try {
+            const modelData = await models.loadModel(name);
+            socket.emit('modelData', { name: name, data: modelData });
+        } catch (err) {
+            socket.emit('modelData', { name: name, error: err.toString() });
+        }
+    });
+    socket.on('doQuery', async (model, query, options) => {
+        try {
+            const queryResult = await models.doQuery(model, query, options);
+            socket.emit('queryResult', { model: model, query: query, data: queryResult });
+        } catch (err) {
+            socket.emit('queryResult', { model: model, query: query, error: err.toString() });
+        }
+    });
+
+    socket.emit('models', models.models);
+});
+
+app.use(function(req, res) {
+    res.status(400).sendFile(path.join(__dirname,'static', '404.html'));
+});
+
+http.listen(3000, function() {
+    console.log('Listening on port 3000!');
+});

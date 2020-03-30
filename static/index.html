@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>What-If Simulation Animator</title>
+    <script src="js/libs/jquery-3.3.1.min.js"></script>
+    <script src="https://unpkg.com/deck.gl@^8.0.0/dist.min.js"></script>
+    <script src="https://api.tiles.mapbox.com/mapbox-gl-js/v1.4.0/mapbox-gl.js"></script>
+    <script src="js/libs/socket.io.js" type="text/javascript"></script>
+    <script src="js/comm.js" type="text/javascript"></script>
+    <script src="js/map.js" type="text/javascript"></script>
+    <script src="js/model.js" type="text/javascript"></script>
+    <script src="js/main.js" type="text/javascript"></script>
+    <link rel="stylesheet" type="text/css" href="https://api.tiles.mapbox.com/mapbox-gl-js/v1.4.0/mapbox-gl.css" />
+    <link rel="stylesheet" type="text/css" href="css/style.css" />
+</head>
+<body>
+<div id="visualization">
+</div>
+
+<div class="title">
+    What-If
+</div>
+<div class="subtitle">
+    Simulation Animator
+</div>
+
+<div class="control-sidebar">
+    <div id="model_selection" class="control-container">
+        <a class="expand-icon" href="#" title="Click to open or close">+</a>
+        <div class="header">Model <span class="subheader"></span></div>
+        <div class='inner-container'>
+            <form enctype="multipart/form-data" method="post">
+                <p>
+                    Choose a model:
+                    <select name="model" id="model"></select>
+                </p>
+                <input class='run' type='submit' value='Load Model'/>
+            </form>
+        </div>
+    </div>
+
+    <div id="query_entry" class="control-container">
+        <a class="expand-icon" href="#" title="Click to open or close">+</a>
+        <div class="header">Query <span class="subheader"></span></div>
+        <div class='inner-container'>
+            <form enctype="multipart/form-data" method="post">
+                <p>
+                    <div>Examples:</div>
+                    <div class='query-example' onclick='$("#query").val("<.> .* [s2#.] .* <.> 0 OVER"); $("#query_entry form").submit();'>&lt;.> .* [s2#.] .* &lt;.> 0 OVER</div>
+                    <div class='query-example' onclick='$("#query").val("<.> .* [s2#.] .* [s6#.] <.> 0 OVER"); $("#query_entry form").submit();'>&lt;.> .* [s2#.] .* [s6#.] &lt;.> 0 OVER</div>
+                    <div class='query-example' onclick='$("#query").val("<.> .* [s2#.] .* [s5#.] <.> 0 OVER"); $("#query_entry form").submit();'>&lt;.> .* [s2#.] .* [s5#.] &lt;.> 0 OVER</div>
+                </p>
+                <p>
+                    <input type='text' id='query' value='<.> .* [s2#.] .* [s6#.] <.> 0 OVER'/>
+                </p>
+                <p>
+                    <label for='engine'>Use engine:</label>
+                    <select name='engine' id='engine'>
+                        <option value='1'>Moped</option>
+                        <option value='2'>Post*</option>
+                        <option value='3'>Pre*</option>
+                    </select>
+                </p>
+                <input class='run' type='submit' value='Run Query'/>
+            </form>
+        </div>
+    </div>
+
+    <div id="view_options" class="control-container">
+        <a class="expand-icon" href="#" title="Click to open or close">+</a>
+        <div class="header">View Options <span class="subheader"></span></div>
+        <div class='inner-container'>
+            <p>
+                <input type='checkbox' id='view-all' name='view-all' value='false'/>
+                <label for='view-all'>View all traces</label>
+            </p>
+            <p>
+                <input class='run' id='top-down' type='button' value='Top Down'/>
+            </p>
+        </div>
+    </div>
+
+    <div id="query_result" class="control-container">
+        <a class="expand-icon" href="#" title="Click to open or close">+</a>
+        <div class="header">Result</div>
+        <div class="inner-container">
+            <p id="queryresult"></p>
+        </div>
+    </div>
+</div>
+
+<div id="wait">
+    <img alt="Loading" src="img/loading.gif"/>
+</div>
+
+</body>
+</html>
