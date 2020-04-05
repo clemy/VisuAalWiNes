@@ -32,11 +32,21 @@ class Models {
     get models() {
         return this._models;
     }
-
     async loadModel(name) {
+        const netFile = path.join(this._modelsPath, name, 'net.json');
+        try {
+            var netFileContent = await fsp.readFile(netFile, 'utf8');
+        } catch(e) {
+            return this.calculateModel(name);
+        }
+        return JSON.parse(netFileContent);
+    }
+
+    async calculateModel(name) {
         const mopedPath = path.join(this._binPath, 'moped');
         const topologyFile = path.join(this._modelsPath, name, 'topo.xml');
         const routingFile = path.join(this._modelsPath, name, 'routing.xml');
+        const netFile = path.join(this._modelsPath, name, 'net.json');
         var stdout, stderr;
         try {
             ({ stdout, stderr } = await execFile(path.join(this._binPath, 'aalwines'),
@@ -47,6 +57,10 @@ class Models {
             console.error('loadModel error', name, err);
             throw err.toString();
         }
+        //TODO: we need to synchronize file writes (see documentation of fsPromise.writeFile)
+        fsp.writeFile(netFile, stdout).catch(reason => {
+            console.error("write net.json file error", name, reason);
+        });
         return JSON.parse(stdout);
     }
 

@@ -3,3 +3,9 @@ node_modules/
 # files from build
 /prexvis
 /prexvis-*.tgz
+
+# cache files
+/data/models/*/net.json
+
+# large data files
+/data/models/nn-net/
