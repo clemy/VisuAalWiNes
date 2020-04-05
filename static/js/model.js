@@ -47,16 +47,50 @@ function model_fillGps(data) {
     data.minLng = 9.991016;
     data.maxLat = 57.017997;
     data.maxLng = 10.001937;
-    const routerCount = Object.keys(data.routers).length;
+    // How many routers do not have a location assigned
+    const routerCount = Object.keys(data.routers)
+        .filter(routerName => data.routers[routerName].lat == null || data.routers[routerName].lng == null)
+        .length;
+    console.log("From " + Object.keys(data.routers).length + " routers " + routerCount + " do not have a valid location assigned");
     const squareSideCount = Math.floor(Math.sqrt(routerCount));
     const dlat = (data.maxLat - data.minLat) / squareSideCount;
     const dlon = (data.maxLng - data.minLng) / squareSideCount;
-    Object.keys(data.routers).forEach((routerName, i) => {
-        data.routers[routerName].lat = data.minLat + Math.floor(i / squareSideCount) * dlat;
-        data.routers[routerName].lng = data.minLng + Math.floor(i % squareSideCount) * dlon;
-    });
-    data.maxLat = data.minLat + Math.floor((routerCount - 1) / squareSideCount) * dlat;
-    data.maxLng = data.minLng + Math.floor((routerCount - 1) % squareSideCount) * dlon;
+    // Assign coordinates to routers without location
+    Object.keys(data.routers)
+        .filter(routerName => data.routers[routerName].lat == null || data.routers[routerName].lng == null)
+        .forEach((routerName, i) => {
+            data.routers[routerName].lat = data.minLat + Math.floor(i / squareSideCount) * dlat;
+            data.routers[routerName].lng = data.minLng + Math.floor(i % squareSideCount) * dlon;
+        }
+    );
+    // Check for duplicate locations and move them away
+    const usedLocations = new Map();
+    Object.keys(data.routers)
+        .forEach((routerName) => {
+            usedLats = usedLocations.get(data.routers[routerName].lng);
+            if (usedLats == null) {
+                const usedLats = new Set();
+                usedLats.add(data.routers[routerName].lat);
+                usedLocations.set(data.routers[routerName].lng, usedLats);
+            } else {
+                while (usedLats.has(data.routers[routerName].lat)) {
+                    // move away
+                    data.routers[routerName].lat += 0.01; //~1km
+                    console.log("moved router " + routerName + " due to using same coordinates as another router");
+                }
+                usedLats.add(data.routers[routerName].lat);
+            }
+        }
+    );
+    // Get real coordinate range for view
+    Object.keys(data.routers)
+        .forEach((routerName) => {
+            data.minLat = Math.min(data.routers[routerName].lat, data.minLat);
+            data.maxLat = Math.max(data.routers[routerName].lat, data.maxLat);
+            data.minLng = Math.min(data.routers[routerName].lng, data.minLng);
+            data.maxLng = Math.max(data.routers[routerName].lng, data.maxLng);
+        }
+    );
 }
 
 function add_models(models) {

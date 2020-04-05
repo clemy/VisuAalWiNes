@@ -32,14 +32,16 @@ class Models {
     get models() {
         return this._models;
     }
+
     async loadModel(name) {
         const netFile = path.join(this._modelsPath, name, 'net.json');
+        let network;
         try {
-            var netFileContent = await fsp.readFile(netFile, 'utf8');
+            network = await fsp.readFile(netFile, 'utf8');
         } catch(e) {
-            return this.calculateModel(name);
+            network = this.calculateModel(name);
         }
-        return JSON.parse(netFileContent);
+        return await this.augmentModelWithLocation(name, JSON.parse(network));
     }
 
     async calculateModel(name) {
@@ -61,7 +63,23 @@ class Models {
         fsp.writeFile(netFile, stdout).catch(reason => {
             console.error("write net.json file error", name, reason);
         });
-        return JSON.parse(stdout);
+        return stdout;
+    }
+
+    async augmentModelWithLocation(name, network) {
+        const locationFile = path.join(this._modelsPath, name, 'location.json');
+        let locationFileContent;
+        try {
+            locationFileContent = await fsp.readFile(locationFile, 'utf8');
+        } catch(e) {
+            return network;
+        }
+        const locations = JSON.parse(locationFileContent);
+        
+        Object.keys(network.routers).forEach(routerName => {
+            Object.assign(network.routers[routerName], locations[routerName]);
+        });
+        return network;
     }
 
     async doQuery(model, query, options) {
