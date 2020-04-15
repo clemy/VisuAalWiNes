@@ -14,6 +14,7 @@ let currentViewState = {
     pitch: 40
 };
 let view_all = false;
+let top_down = false;
 let usedEdgesCount = 0;
 
 function map_init() {
@@ -123,9 +124,10 @@ function map_init() {
     });
 
     $("#top-down").click(function () {
+        top_down = $("#top-down").prop('checked');
         currentViewState = Object.assign({}, currentViewState, {
-            pitch: 0,
-            bearing: 0,
+            bearing: top_down ? 0 : -32,
+            pitch: top_down ? 0 : 40,
             transitionDuration: 1000,
             transitionInterpolator: new deck.FlyToInterpolator()
         });
@@ -169,7 +171,8 @@ function show_simulation(data) {
         longitude,
         latitude,
         zoom: zoom - 1,
-        bearing: -32,
+        bearing: top_down ? 0 : -32,
+        pitch: top_down ? 0 : 40,
         transitionDuration: 3000,
         transitionInterpolator: new deck.FlyToInterpolator()
     });

@@ -27,8 +27,8 @@ function model_init() {
         var options = {
             engine: $("#engine").val()
         };
-        socket.emit('doQuery', selected_model, query, options);
-        $("#query_entry").children(".expand-icon").click();
+        socket.emit('doQuery', selected_model, query + " DUAL", options);
+        //$("#query_entry").children(".expand-icon").click();
     });
 }
 
@@ -38,6 +38,7 @@ function load_model(data) {
     }
     model_fillGps(data.data);
     model_data = data.data;
+    show_queryExamples(model_data.queries);
     show_simulation(model_data);
     $("#wait").hide(200);
 }
@@ -105,12 +106,26 @@ function add_models(models) {
     $("#model").html(data);
 }
 
+function show_queryExamples(data) {
+    $("#query-examples").empty();
+    if (data) {
+        $("#query-examples").append($("<div>Examples:</div>"));
+        for (const query of data) {
+            $("#query-examples").append($("<div class='query-example'></div>").click(() => {
+                $("#query").val(query.query);
+                //$("#query_entry form").submit();
+            }).text(query.query).attr("title", query.description));
+        }
+    }
+}
+
 function show_queryResult(data) {
     console.log(data);
     $("#wait").hide(200);
     if ($("#query_result").children(".expand-icon").text() == '+') {
         $("#query_result").children(".expand-icon").click();
     }
+    $("#queryresult").empty();
     // deep copy
     current_data = JSON.parse(JSON.stringify(model_data));
     if (data.error === undefined) {
@@ -124,6 +139,11 @@ function show_queryResult(data) {
                     result += '<tr onclick="set_current_step(' + step + ')"><td> </td><td>' + entry.ingoing + '->' + entry.rule.via + ' (' + entry.rule.weight + ')</td></tr>';
                     return;
                 }
+                result += '<tr onclick="set_current_step(' + step + ')"><td>' + entry.router + '</td><td>' + entry.stack + '</td></tr>';
+                if (current_data.routers[entry.router] === undefined) {
+                    // skip unknown routers (especially the last NULL router)
+                    return;
+                }
                 if (current_data.routers[entry.router].mode === undefined) {
                     current_data.routers[entry.router].mode = step;
                 }
@@ -135,7 +155,6 @@ function show_queryResult(data) {
                     current_data.routers[prevRouter].usedTargets.push(entry.router);
                     current_data.routers[prevRouter].traceInfo.push({ target: entry.router, step });
                 }
-                result += '<tr onclick="set_current_step(' + step + ')"><td>' + entry.router + '</td><td>' + entry.stack + '</td></tr>';
                 prevRouter = entry.router;
                 step++;
             });
@@ -144,6 +163,11 @@ function show_queryResult(data) {
         $("#queryresult").html(result);
         show_simulation(current_data);
     } else {
-        $("#queryresult").text(data.query + ': ' + data.error);
+        const errorpos = data.error.match("\\[1\\.([0-9]+)\\]");
+        if (errorpos) {
+            $("#queryresult").append($("<span class='error-begin'></span>").text(data.query.substring(0, errorpos[1] - 1)));
+            $("#queryresult").append($("<span class='error-end'></span>").text(data.query.substring(errorpos[1] - 1, data.query.length - 5)));
+        }
+        $("#queryresult").append($("<p class='error-text'></p>").text(data.error));
     }
 }

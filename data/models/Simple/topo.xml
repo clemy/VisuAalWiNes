@@ -1,0 +1,45 @@
+<network>
+	<routers>
+		<router name="rA">
+			<interfaces>
+				<interface name="iA1" external="yes" />
+				<interface name="iA2" />
+				<interface name="iA3" />
+			</interfaces>
+		</router>
+		<router name="rB">
+			<interfaces>
+				<interface name="iB1" />
+				<interface name="iB2" />
+			</interfaces>
+		</router>
+		<router name="rC">
+			<interfaces>
+				<interface name="iC1" />
+				<interface name="iC2" />
+				<interface name="iC3"  external="yes" />
+			</interfaces>
+		</router>
+	</routers>
+
+	<links>
+		<link>
+			<sides>
+				<shared_interface router="rA" interface="iA2" />
+				<shared_interface router="rB" interface="iB1" />
+			</sides>
+		</link>
+		<link>
+			<sides>
+				<shared_interface router="rA" interface="iA3" />
+				<shared_interface router="rC" interface="iC2" />
+			</sides>
+		</link>
+		<link>
+			<sides>
+				<shared_interface router="rB" interface="iB2" />
+				<shared_interface router="rC" interface="iC1" />
+			</sides>
+		</link>
+	</links>
+</network>

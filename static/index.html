@@ -45,14 +45,11 @@
         <div class="header">Query <span class="subheader"></span></div>
         <div class='inner-container'>
             <form enctype="multipart/form-data" method="post">
+                <p></p>
+                <div id="query-examples">
+                </div>
                 <p>
-                    <div>Examples:</div>
-                    <div class='query-example' onclick='$("#query").val("<.> .* [s2#.] .* <.> 0 OVER"); $("#query_entry form").submit();'>&lt;.> .* [s2#.] .* &lt;.> 0 OVER</div>
-                    <div class='query-example' onclick='$("#query").val("<.> .* [s2#.] .* [s6#.] <.> 0 OVER"); $("#query_entry form").submit();'>&lt;.> .* [s2#.] .* [s6#.] &lt;.> 0 OVER</div>
-                    <div class='query-example' onclick='$("#query").val("<.> .* [s2#.] .* [s5#.] <.> 0 OVER"); $("#query_entry form").submit();'>&lt;.> .* [s2#.] .* [s5#.] &lt;.> 0 OVER</div>
-                </p>
-                <p>
-                    <input type='text' id='query' value='<.> .* [s2#.] .* [s6#.] <.> 0 OVER'/>
+                    <input type='text' id='query' placeholder='Enter query here'/>
                 </p>
                 <p>
                     <label for='engine'>Use engine:</label>
@@ -62,22 +59,14 @@
                         <option value='3'>Pre*</option>
                     </select>
                 </p>
-                <input class='run' type='submit' value='Run Query'/>
+                <p>
+                    <input type='checkbox' id='view-all' name='view-all' value='false'/>
+                    <label for='view-all'>View all links</label>
+                    <input type='checkbox' id='top-down' name='top-down' value='false'/>
+                    <label for='top-down'>Top Down View</label>
+                </p>
+                <input class='run' type='submit' value='Recompute'/>
             </form>
-        </div>
-    </div>
-
-    <div id="view_options" class="control-container">
-        <a class="expand-icon" href="#" title="Click to open or close">+</a>
-        <div class="header">View Options <span class="subheader"></span></div>
-        <div class='inner-container'>
-            <p>
-                <input type='checkbox' id='view-all' name='view-all' value='false'/>
-                <label for='view-all'>View all traces</label>
-            </p>
-            <p>
-                <input class='run' id='top-down' type='button' value='Top Down'/>
-            </p>
         </div>
     </div>
 

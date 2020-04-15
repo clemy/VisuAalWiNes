@@ -39,9 +39,9 @@ class Models {
         try {
             network = await fsp.readFile(netFile, 'utf8');
         } catch(e) {
-            network = this.calculateModel(name);
+            network = await this.calculateModel(name);
         }
-        return await this.augmentModelWithLocation(name, JSON.parse(network));
+        return await this.augmentModel(name, JSON.parse(network));
     }
 
     async calculateModel(name) {
@@ -66,6 +66,12 @@ class Models {
         return stdout;
     }
 
+    async augmentModel(name, network) {
+        network = await this.augmentModelWithLocation(name, network);
+        network = await this.augmentModelWithQueries(name, network);
+        return network;
+    }
+
     async augmentModelWithLocation(name, network) {
         const locationFile = path.join(this._modelsPath, name, 'location.json');
         let locationFileContent;
@@ -79,6 +85,19 @@ class Models {
         Object.keys(network.routers).forEach(routerName => {
             Object.assign(network.routers[routerName], locations[routerName]);
         });
+        return network;
+    }
+
+    async augmentModelWithQueries(name, network) {
+        const queriesFile = path.join(this._modelsPath, name, 'queries.json');
+        let queriesFileContent;
+        try {
+            queriesFileContent = await fsp.readFile(queriesFile, 'utf8');
+        } catch(e) {
+            return network;
+        }
+        const queries = JSON.parse(queriesFileContent);
+        network.queries = queries;
         return network;
     }
 
@@ -96,7 +115,7 @@ class Models {
                 ));
             } catch (err) {
                 console.error('loadModel error', model, err);
-                throw err.toString();
+                throw err.stderr ? err.stderr : err.toString();
             }
         }, { discardDescriptor: true/*, dir: path.join(this._modelsPath, model)*/ });
         return JSON.parse(stdout);
