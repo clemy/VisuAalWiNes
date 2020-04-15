@@ -28,7 +28,7 @@ function model_init() {
             engine: $("#engine").val()
         };
         socket.emit('doQuery', selected_model, query, options);
-        $("#query_entry").children(".expand-icon").click();
+        //$("#query_entry").children(".expand-icon").click();
     });
 }
 
