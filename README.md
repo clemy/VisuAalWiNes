@@ -39,13 +39,15 @@ chrome http://localhost:3000/
 
 ## Important files
 
-| path                          | description |
-| ----------------------------- | ----------- |
-| `./data/models/*`             | network models |
-| `./data/models/*/topo.xml`    | topography in P-Rex format |
-| `./data/models/*/routing.xml` | routing in P-Rex format |
-| `./bin/aalwines`              | binary of AalWiNes tool |
-| `./bin/moped`                 | binary of moped tool |
+| path                            | description |
+| ------------------------------- | ----------- |
+| `./data/models/*`               | network models |
+| `./data/models/*/topo.xml`      | topography in P-Rex format |
+| `./data/models/*/routing.xml`   | routing in P-Rex format |
+| `./data/models/*/queries.json`  | example queries |
+| `./data/models/*/location.json` | router locations |
+| `./bin/aalwines`                | binary of AalWiNes tool |
+| `./bin/moped`                   | binary of moped tool |
 
 ## Building a binary delivery package
 
