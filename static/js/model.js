@@ -27,7 +27,7 @@ function model_init() {
         var options = {
             engine: $("#engine").val()
         };
-        socket.emit('doQuery', selected_model, query, options);
+        socket.emit('doQuery', selected_model, query + " DUAL", options);
         //$("#query_entry").children(".expand-icon").click();
     });
 }
