@@ -1,0 +1,10 @@
+[
+    {
+        "description": "Exist any trace from Munich to Lisbon.",
+        "query": "<.> [.#Munich] .* [.#Lisbon] <.> 0"
+    },
+    {
+        "description": "Exist a trace from Munich to Lisbon with three failover links.",
+        "query": "<.> [.#Munich] .* [.#Lisbon] <.> 3"
+    }
+]
