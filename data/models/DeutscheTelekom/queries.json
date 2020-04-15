@@ -1,0 +1,27 @@
+[
+    {
+        "description": "Exist any trace, such that Zurich is connected to Paris through any trace.",
+        "query": "<.> [.#Zurich] .* [Paris#.] <.> 0"
+    },
+    {
+        "description": "Exist any trace, such that Zurich is connected to Paris through any trace with one failover link.",
+        "query": "<.> [.#Zurich] .* [Paris#.] <.> 1"
+    },
+    {
+        "description": "Exist any trace from Zurich to Budapest.",
+        "query": "<.> [.#Zurich] .* [Budapest#.] <.> 0"
+    },
+    {
+        "description": "Exist a trace from Toronto and a stack [2882] of size one, such that it is connected to Singapore through any trace.",
+        "query": "<[2882]> [.#Toronto] .* [Singapore#.] <.> 0"
+    },
+    {
+        "description": "Exist a trace from Toronto and a stack [2882] of size one, such that it is connected to Singapore through two sub traces linked to Amsterdam.",
+        "query": "<[2882]> [.#Toronto] .* [.#Amsterdam] .* [Singapore#.] <.> 0"
+    },
+    {
+        "description": "Exist a trace from Toronto and a stack [2882] of size one, such that it is connected to Singapore through two sub traces linked to Amsterdam with one failover link.",
+        "query": "<[2882]> [.#Toronto] .* [.#Amsterdam] .* [Singapore#.] <.> 1"
+    }
+]
+        
