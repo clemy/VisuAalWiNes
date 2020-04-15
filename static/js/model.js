@@ -138,6 +138,11 @@ function show_queryResult(data) {
                     result += '<tr onclick="set_current_step(' + step + ')"><td> </td><td>' + entry.ingoing + '->' + entry.rule.via + ' (' + entry.rule.weight + ')</td></tr>';
                     return;
                 }
+                result += '<tr onclick="set_current_step(' + step + ')"><td>' + entry.router + '</td><td>' + entry.stack + '</td></tr>';
+                if (current_data.routers[entry.router] === undefined) {
+                    // skip unknown routers (especially the last NULL router)
+                    return;
+                }
                 if (current_data.routers[entry.router].mode === undefined) {
                     current_data.routers[entry.router].mode = step;
                 }
@@ -149,7 +154,6 @@ function show_queryResult(data) {
                     current_data.routers[prevRouter].usedTargets.push(entry.router);
                     current_data.routers[prevRouter].traceInfo.push({ target: entry.router, step });
                 }
-                result += '<tr onclick="set_current_step(' + step + ')"><td>' + entry.router + '</td><td>' + entry.stack + '</td></tr>';
                 prevRouter = entry.router;
                 step++;
             });
