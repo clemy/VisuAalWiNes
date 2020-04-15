@@ -62,22 +62,14 @@
                         <option value='3'>Pre*</option>
                     </select>
                 </p>
-                <input class='run' type='submit' value='Run Query'/>
+                <p>
+                    <input type='checkbox' id='view-all' name='view-all' value='false'/>
+                    <label for='view-all'>View all links</label>
+                    <input type='checkbox' id='top-down' name='top-down' value='false'/>
+                    <label for='top-down'>Top Down View</label>
+                </p>
+                <input class='run' type='submit' value='Recompute'/>
             </form>
-        </div>
-    </div>
-
-    <div id="view_options" class="control-container">
-        <a class="expand-icon" href="#" title="Click to open or close">+</a>
-        <div class="header">View Options <span class="subheader"></span></div>
-        <div class='inner-container'>
-            <p>
-                <input type='checkbox' id='view-all' name='view-all' value='false'/>
-                <label for='view-all'>View all traces</label>
-            </p>
-            <p>
-                <input class='run' id='top-down' type='button' value='Top Down'/>
-            </p>
         </div>
     </div>
 
