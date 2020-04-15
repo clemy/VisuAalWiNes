@@ -38,6 +38,7 @@ function load_model(data) {
     }
     model_fillGps(data.data);
     model_data = data.data;
+    show_queryExamples(model_data.queries);
     show_simulation(model_data);
     $("#wait").hide(200);
 }
@@ -103,6 +104,19 @@ function add_models(models) {
         data += ">" + models[i] + "</option>";
     }
     $("#model").html(data);
+}
+
+function show_queryExamples(data) {
+    $("#query-examples").empty();
+    if (data) {
+        $("#query-examples").append($("<div>Examples:</div>"));
+        for (const query of data) {
+            $("#query-examples").append($("<div class='query-example'></div>").click(() => {
+                $("#query").val(query.query);
+                //$("#query_entry form").submit();
+            }).text(query.query).attr("title", query.description));
+        }
+    }
 }
 
 function show_queryResult(data) {
