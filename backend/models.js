@@ -39,7 +39,7 @@ class Models {
         try {
             network = await fsp.readFile(netFile, 'utf8');
         } catch(e) {
-            network = this.calculateModel(name);
+            network = await this.calculateModel(name);
         }
         return await this.augmentModel(name, JSON.parse(network));
     }
