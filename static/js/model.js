@@ -125,6 +125,7 @@ function show_queryResult(data) {
     if ($("#query_result").children(".expand-icon").text() == '+') {
         $("#query_result").children(".expand-icon").click();
     }
+    $("#queryresult").empty();
     // deep copy
     current_data = JSON.parse(JSON.stringify(model_data));
     if (data.error === undefined) {
@@ -162,6 +163,11 @@ function show_queryResult(data) {
         $("#queryresult").html(result);
         show_simulation(current_data);
     } else {
-        $("#queryresult").text(data.query + ': ' + data.error);
+        const errorpos = data.error.match("\\[1\\.([0-9]+)\\]");
+        if (errorpos) {
+            $("#queryresult").append($("<span class='error-begin'></span>").text(data.query.substring(0, errorpos[1] - 1)));
+            $("#queryresult").append($("<span class='error-end'></span>").text(data.query.substring(errorpos[1] - 1, data.query.length - 5)));
+        }
+        $("#queryresult").append($("<p class='error-text'></p>").text(data.error));
     }
 }

@@ -115,7 +115,7 @@ class Models {
                 ));
             } catch (err) {
                 console.error('loadModel error', model, err);
-                throw err.toString();
+                throw err.stderr ? err.stderr : err.toString();
             }
         }, { discardDescriptor: true/*, dir: path.join(this._modelsPath, model)*/ });
         return JSON.parse(stdout);

@@ -120,3 +120,16 @@ input[type=text] {
 tr:hover {
     font-weight: bold;
 }
+
+.error-begin {
+    font-family: monospace;
+}
+
+.error-end {
+    font-family: monospace;
+    color: red;
+}
+
+.error-text {
+    font-size: smaller;
+}
