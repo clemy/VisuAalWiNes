@@ -138,11 +138,10 @@ function show_queryResult(data) {
             var step = 0; // step 0 is no active edge
             data.data.answers.Q1.trace.forEach(entry => {
                 if (entry.router === undefined) {
-                    //result += '<tr onclick="set_current_step(' + step + ')"><td> </td><td>' + entry.ingoing + '->' + entry.rule.via + ' (' + entry.rule.weight + ')</td></tr>';
                     if (entry.rule.ops) {
                         entry.rule.ops.forEach(op => {
-                            result += '<tr onclick="set_current_step(' + (step - 1) + ')"><td>&nbsp;' +
-                            Object.keys(op).map(key => key + '(' + op[key] + ')').join('; ');
+                            result += '<tr onclick="set_current_step(' + (step - 1) + ')"><td style="color: green;">&nbsp;&nbsp;&nbsp;' +
+                            (typeof op === 'string' ? op + '()' : Object.keys(op).map(key => key + '(' + op[key] + ')').join('; '))
                             ')</td></tr>';
                         });
                     }
