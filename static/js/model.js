@@ -129,17 +129,28 @@ function show_queryResult(data) {
     // deep copy
     current_data = JSON.parse(JSON.stringify(model_data));
     if (data.error === undefined) {
-        var result = '<div>Found Trace: ' + (data.data.answers.Q1.result ? 'Yes' : 'No') + '</div>';
+        var result = '';
+        if (!data.data.answers.Q1.result) {
+            result = '<div>No trace found.</div>';
+        }
         var prevRouter;
         if (data.data.answers.Q1.trace !== undefined && data.data.answers.Q1.trace.length > 0) {
-            result += '<table><tr><th>Router</th><th>Stack / Rule</th></tr>';
             var step = 0; // step 0 is no active edge
             data.data.answers.Q1.trace.forEach(entry => {
                 if (entry.router === undefined) {
-                    result += '<tr onclick="set_current_step(' + step + ')"><td> </td><td>' + entry.ingoing + '->' + entry.rule.via + ' (' + entry.rule.weight + ')</td></tr>';
+                    //result += '<tr onclick="set_current_step(' + step + ')"><td> </td><td>' + entry.ingoing + '->' + entry.rule.via + ' (' + entry.rule.weight + ')</td></tr>';
+                    if (entry.rule.ops) {
+                        entry.rule.ops.forEach(op => {
+                            result += '<tr onclick="set_current_step(' + (step - 1) + ')"><td>&nbsp;' +
+                            Object.keys(op).map(key => key + '(' + op[key] + ')').join('; ');
+                            ')</td></tr>';
+                        });
+                    }
                     return;
                 }
-                result += '<tr onclick="set_current_step(' + step + ')"><td>' + entry.router + '</td><td>' + entry.stack + '</td></tr>';
+                result += '<tr onclick="set_current_step(' + step + ')"><td>[' +
+                    entry.stack + '] -> ' + (entry.router == 'NULL' ? '' : entry.router) +
+                    '</td></tr>';
                 if (current_data.routers[entry.router] === undefined) {
                     // skip unknown routers (especially the last NULL router)
                     return;
