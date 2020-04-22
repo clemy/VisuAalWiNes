@@ -108,15 +108,22 @@ class Models {
         var stdout, stderr;
         await tmp.withFile(async ({ path: tmpQueryFile }) => {
             await fsp.writeFile(tmpQueryFile, query);
-            try {
-                ({ stdout, stderr } = await execFile(path.join(this._binPath, 'aalwines'),
-                    ['--topology', topologyFile, '--routing', routingFile, '-e', options.engine, '-t', '-q', tmpQueryFile],
-                    { env: { MOPED_PATH: mopedPath }}
-                ));
-            } catch (err) {
-                console.error('loadModel error', model, err);
-                throw err.stderr ? err.stderr : err.toString();
-            }
+            let parameters = ['--topology', topologyFile, '--routing', routingFile, '-e', options.engine, '-t', '-q', tmpQueryFile];
+            await tmp.withFile(async ({ path: tmpWeightFile }) => {
+                if (options.weight) {
+                    await fsp.writeFile(tmpWeightFile, JSON.stringify(options.weight));
+                    parameters = [...parameters, '-w', tmpWeightFile];
+                }
+                try {
+                    ({ stdout, stderr } = await execFile(path.join(this._binPath, 'aalwines'),
+                        parameters,
+                        { env: { MOPED_PATH: mopedPath }}
+                    ));
+                } catch (err) {
+                    console.error('loadModel error', model, err);
+                    throw err.stderr ? err.stderr : err.toString();
+                }
+            }, { discardDescriptor: true });
         }, { discardDescriptor: true/*, dir: path.join(this._modelsPath, model)*/ });
         return JSON.parse(stdout);
     }

@@ -4,12 +4,14 @@
     <meta charset="UTF-8">
     <title>What-If Simulation Animator</title>
     <script src="js/libs/jquery-3.3.1.min.js"></script>
+    <script src="js/libs/Sortable-1.10.2.min.js"></script>
     <script src="https://unpkg.com/deck.gl@^8.0.0/dist.min.js"></script>
     <script src="https://api.tiles.mapbox.com/mapbox-gl-js/v1.4.0/mapbox-gl.js"></script>
     <script src="js/libs/socket.io.js" type="text/javascript"></script>
     <script src="js/comm.js" type="text/javascript"></script>
     <script src="js/map.js" type="text/javascript"></script>
     <script src="js/model.js" type="text/javascript"></script>
+    <script src="js/weight.js" type="text/javascript"></script>
     <script src="js/main.js" type="text/javascript"></script>
     <link rel="stylesheet" type="text/css" href="https://api.tiles.mapbox.com/mapbox-gl-js/v1.4.0/mapbox-gl.css" />
     <link rel="stylesheet" type="text/css" href="css/style.css" />
@@ -65,6 +67,37 @@
                     <input type='checkbox' id='top-down' name='top-down' value='false'/>
                     <label for='top-down'>Top Down View</label>
                 </p>
+                <input class='run' type='submit' value='Recompute'/>
+            </form>
+        </div>
+    </div>
+
+    <div id="weight_entry" class="control-container">
+        <a class="expand-icon" href="#" title="Click to open or close">+</a>
+        <div class="header">Weights <span class="subheader"></span></div>
+        <div class='inner-container'>
+            <form enctype="multipart/form-data" method="post">
+                <div id="weight_outer">
+                    <div id="weight_left">
+                        Used weights:
+                        <div id="weight_list">
+                            <div id="initial_weight_group" class="weight_group">Priority Group</div>
+                        </div>
+                    </div>
+                    <div id="weight_right">
+                        Drag from here:
+                        <div id="weight_group_template">
+                            <div class="weight_group">Priority Group</div>
+                        </div>
+                        <div id="weight_templates">
+                            <div class="weight_item">hops<input type='text' value='1'/></div>
+                            <div class="weight_item">failures<input type='text' value='1'/></div>
+                            <div class="weight_item">tunnels<input type='text' value='1'/></div>
+                            <div class="weight_item">latency<input type='text' value='1'/></div>
+                            <div class="weight_item">zero<input type='text' value='1'/></div>
+                        </div>
+                    </div>
+                </div>
                 <input class='run' type='submit' value='Recompute'/>
             </form>
         </div>

@@ -2,6 +2,7 @@ $(document).ready(function () {
     comm_init();
     map_init();
     model_init();
+    weight_init();
 
     $(".expand-icon, .header").click(function () {
         $(this).siblings(".inner-container").toggle(200);

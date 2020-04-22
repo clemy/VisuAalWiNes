@@ -133,3 +133,54 @@ tr:hover {
 .error-text {
     font-size: smaller;
 }
+
+#weight_outer {
+    overflow: hidden;
+    margin-top: 10px;
+}
+
+#weight_left {
+    float: left;
+    width: 150px;
+}
+
+#weight_right {
+    margin-left: 170px;
+}
+
+.weight_group {
+    border: 1px solid #005c9b;
+    border-radius: 10px;
+    margin: 5px 0px 5px 0px;
+    padding-left: 10px;
+    padding-right: 5px;
+    box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.5);
+}
+
+.weight_item {
+    border: 1px solid #005c9b;
+    border-radius: 10px;
+    margin: 3px 0px 3px 15px;
+    padding-left: 10px;
+    box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.5);
+}
+
+.weight_item input {
+    float: right;
+    width: 30px;
+    height: 15px;
+    margin-top: 2px;
+    margin-right: 3px;
+    border: 1px solid #005c9b;
+    border-radius: 10px;
+    padding: 1px;
+    text-align: center;
+}
+
+#weight_left .weight_item input {
+    width: 40px;
+}
+
+.weight_item input:focus {
+    outline-style: none;
+}

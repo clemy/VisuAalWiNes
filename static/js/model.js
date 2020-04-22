@@ -17,16 +17,21 @@ function model_init() {
         }
     });
 
-    $("#query_entry form").prop("onclick", null).off("submit");
-    $("#query_entry form").submit(function (e) {
+    $("#query_entry,#weight_entry form").prop("onclick", null).off("submit");
+    $("#query_entry,#weight_entry form").submit(function (e) {
         e.preventDefault();
         var query = $("#query").val();
         $("#query_entry .subheader").text(query);
         $("#queryresult").text('');
         $("#wait").show(200);
-        var options = {
-            engine: $("#engine").val()
-        };
+        var options = {};
+        var weight = getWeightList();
+        if (weight) {
+            // Weight is only implemented for engine 2: "Post*"
+            $("#engine").val(2);
+            options = { ...options, weight };
+        }
+        options = { ...options, engine: $("#engine").val() };
         socket.emit('doQuery', selected_model, query + " DUAL", options);
         //$("#query_entry").children(".expand-icon").click();
     });
