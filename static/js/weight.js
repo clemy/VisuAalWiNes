@@ -95,7 +95,6 @@ function weightListChanged() {
     } else {
         $("#weight_entry .subheader").text('');
     }
-    console.log(getWeightList());
 }
 
 function getWeightList() {
