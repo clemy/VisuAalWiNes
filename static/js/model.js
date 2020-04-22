@@ -39,7 +39,7 @@ function load_model(data) {
     model_fillGps(data.data);
     model_data = data.data;
     show_queryExamples(model_data.queries);
-    show_simulation(model_data);
+    show_simulation(model_data, true);
     $("#wait").hide(200);
 }
 
@@ -171,7 +171,7 @@ function show_queryResult(data) {
             result += '</table>';
         }
         $("#queryresult").html(result);
-        show_simulation(current_data);
+        show_simulation(current_data, false);
     } else {
         const errorpos = data.error.match("\\[1\\.([0-9]+)\\]");
         if (errorpos) {

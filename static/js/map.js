@@ -135,7 +135,7 @@ function map_init() {
     });
 }
 
-function show_simulation(data) {
+function show_simulation(data, doZoom) {
     data.first_time = 1;
     data.first_time = 100;
 
@@ -164,19 +164,21 @@ function show_simulation(data) {
     layerText = layerText.clone({data: routers});
     update_deck();
 
-    const bounds = [[data.minLng, data.minLat], [data.maxLng, data.maxLat]];
-    const {viewport} = layerRouter.context;
-    const {longitude, latitude, zoom} = viewport.fitBounds(bounds);
-    currentViewState = Object.assign({}, currentViewState, {
-        longitude,
-        latitude,
-        zoom: zoom - 1,
-        bearing: top_down ? 0 : -32,
-        pitch: top_down ? 0 : 40,
-        transitionDuration: 3000,
-        transitionInterpolator: new deck.FlyToInterpolator()
-    });
-    deckgl.setProps({viewState: currentViewState});
+    if (doZoom) {
+        const bounds = [[data.minLng, data.minLat], [data.maxLng, data.maxLat]];
+        const {viewport} = layerRouter.context;
+        const {longitude, latitude, zoom} = viewport.fitBounds(bounds);
+        currentViewState = Object.assign({}, currentViewState, {
+            longitude,
+            latitude,
+            zoom: zoom - 1,
+            bearing: top_down ? 0 : -32,
+            pitch: top_down ? 0 : 40,
+            transitionDuration: 3000,
+            transitionInterpolator: new deck.FlyToInterpolator()
+        });
+        deckgl.setProps({viewState: currentViewState});
+    }
     current_step = 0;
     usedEdgesCount = usedEdges.length;
     set_current_step(usedEdgesCount);
