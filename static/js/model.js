@@ -8,6 +8,7 @@ function model_init() {
         selected_model = $("#model").val();
         $("#model_selection .subheader").text(selected_model);
         $("#query_entry .subheader").text('');
+        $("#query").val('');
         $("#queryresult").text('');
         $("#wait").show(200);
         socket.emit('getModelData', selected_model);
