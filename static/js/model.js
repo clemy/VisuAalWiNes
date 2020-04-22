@@ -179,7 +179,7 @@ function show_queryResult(data) {
         $("#queryresult").html(result);
         show_simulation(current_data, false);
     } else {
-        const errorpos = data.error.match("\\[1\\.([0-9]+)\\]");
+        const errorpos = data.error.match("\\[1\\.([0-9]+)(-[0-9]+)?\\]");
         if (errorpos) {
             $("#queryresult").append($("<span class='error-begin'></span>").text(data.query.substring(0, errorpos[1] - 1)));
             $("#queryresult").append($("<span class='error-end'></span>").text(data.query.substring(errorpos[1] - 1, data.query.length - 5)));
