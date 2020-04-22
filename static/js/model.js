@@ -8,6 +8,7 @@ function model_init() {
         selected_model = $("#model").val();
         $("#model_selection .subheader").text(selected_model);
         $("#query_entry .subheader").text('');
+        $("#query").val('');
         $("#queryresult").text('');
         $("#wait").show(200);
         socket.emit('getModelData', selected_model);
@@ -17,16 +18,21 @@ function model_init() {
         }
     });
 
-    $("#query_entry form").prop("onclick", null).off("submit");
-    $("#query_entry form").submit(function (e) {
+    $("#query_entry,#weight_entry form").prop("onclick", null).off("submit");
+    $("#query_entry,#weight_entry form").submit(function (e) {
         e.preventDefault();
         var query = $("#query").val();
         $("#query_entry .subheader").text(query);
         $("#queryresult").text('');
         $("#wait").show(200);
-        var options = {
-            engine: $("#engine").val()
-        };
+        var options = {};
+        var weight = getWeightList();
+        if (weight) {
+            // Weight is only implemented for engine 2: "Post*"
+            $("#engine").val(2);
+            options = { ...options, weight };
+        }
+        options = { ...options, engine: $("#engine").val() };
         socket.emit('doQuery', selected_model, query + " DUAL", options);
         //$("#query_entry").children(".expand-icon").click();
     });
@@ -39,7 +45,7 @@ function load_model(data) {
     model_fillGps(data.data);
     model_data = data.data;
     show_queryExamples(model_data.queries);
-    show_simulation(model_data);
+    show_simulation(model_data, true);
     $("#wait").hide(200);
 }
 
@@ -171,9 +177,9 @@ function show_queryResult(data) {
             result += '</table>';
         }
         $("#queryresult").html(result);
-        show_simulation(current_data);
+        show_simulation(current_data, false);
     } else {
-        const errorpos = data.error.match("\\[1\\.([0-9]+)\\]");
+        const errorpos = data.error.match("\\[1\\.([0-9]+)(-[0-9]+)?\\]");
         if (errorpos) {
             $("#queryresult").append($("<span class='error-begin'></span>").text(data.query.substring(0, errorpos[1] - 1)));
             $("#queryresult").append($("<span class='error-end'></span>").text(data.query.substring(errorpos[1] - 1, data.query.length - 5)));
