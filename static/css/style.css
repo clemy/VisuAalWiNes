@@ -42,7 +42,7 @@ body {
 }
 
 .control-sidebar {
-    width: 350px;
+    width: 400px;
     margin: 85px 10px 0px 10px;
     padding: 0px;
     overflow-y: auto;
@@ -145,7 +145,7 @@ tr:hover {
 }
 
 #weight_right {
-    margin-left: 190px;
+    margin-left: 220px;
 }
 
 .weight_group {
@@ -183,4 +183,13 @@ tr:hover {
 
 .weight_item input:focus {
     outline-style: none;
+}
+
+#rawresult {
+    resize: none;
+    width: 364px;
+    height: 440px;
+    white-space: pre;
+    overflow-x: auto;
+    tab-size: 2;
 }

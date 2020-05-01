@@ -125,7 +125,7 @@ class Models {
                 }
             }, { discardDescriptor: true });
         }, { discardDescriptor: true/*, dir: path.join(this._modelsPath, model)*/ });
-        return JSON.parse(stdout);
+        return { ...JSON.parse(stdout), raw: stdout };
     }
 }
 

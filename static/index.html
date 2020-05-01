@@ -67,6 +67,10 @@
                     <input type='checkbox' id='top-down' name='top-down' value='false'/>
                     <label for='top-down'>Top Down View</label>
                 </p>
+                <p>
+                    <input type='checkbox' id='view-raw-result' name='view-raw-result' value='false'/>
+                    <label for='view-raw-result'>Raw Results</label>
+                </p>
                 <input class='run' type='submit' value='Recompute'/>
             </form>
         </div>
@@ -108,6 +112,7 @@
         <div class="header">Result</div>
         <div class="inner-container">
             <p id="queryresult"></p>
+            <textarea id="rawresult" readonly="true"></textarea>
         </div>
     </div>
 </div>

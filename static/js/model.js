@@ -36,6 +36,18 @@ function model_init() {
         socket.emit('doQuery', selected_model, query + " DUAL", options);
         //$("#query_entry").children(".expand-icon").click();
     });
+
+    $("#view-raw-result").click(function () {
+        const view_raw_result = $("#view-raw-result").prop('checked');
+        if (view_raw_result) {
+            $("#queryresult").hide(200);
+            $("#rawresult").show(200);
+        } else {
+            $("#queryresult").show(200);
+            $("#rawresult").hide(200);
+        }
+    });
+    $("#rawresult").hide(200);
 }
 
 function load_model(data) {
@@ -177,6 +189,7 @@ function show_queryResult(data) {
             result += '</table>';
         }
         $("#queryresult").html(result);
+        $("#rawresult").text(data.data.raw.replace(/\r/gm, '\r\n'));
         show_simulation(current_data, false);
     } else {
         const errorpos = data.error.match("\\[1\\.([0-9]+)(-[0-9]+)?\\]");
@@ -185,5 +198,6 @@ function show_queryResult(data) {
             $("#queryresult").append($("<span class='error-end'></span>").text(data.query.substring(errorpos[1] - 1, data.query.length - 5)));
         }
         $("#queryresult").append($("<p class='error-text'></p>").text(data.error));
+        $("#rawresult").text(data.error);
     }
 }
