@@ -53,33 +53,34 @@
                 <p>
                     <input type='text' id='query' placeholder='Enter query here'/>
                 </p>
-                <p>
-                    <label for='engine'>Use engine:</label>
-                    <select name='engine' id='engine'>
-                        <option value='1'>Moped</option>
-                        <option value='2'>Post*</option>
-                        <option value='3'>Pre*</option>
-                    </select>
-                </p>
-                <p>
-                    <input type='checkbox' id='view-all' name='view-all' value='false'/>
-                    <label for='view-all'>View all links</label>
-                    <input type='checkbox' id='top-down' name='top-down' value='false'/>
-                    <label for='top-down'>Top Down View</label>
-                </p>
-                <p>
-                    <input type='checkbox' id='view-raw-result' name='view-raw-result' value='false'/>
-                    <label for='view-raw-result'>Raw Results</label>
-                </p>
-                <input class='run' type='submit' value='Recompute'/>
             </form>
         </div>
     </div>
 
-    <div id="weight_entry" class="control-container">
+    <div id="validate_entry" class="control-container">
+        <input id='run-validation' class='run' type='button' value='Run Validation'/>
+     </div>
+ 
+     <div id="weight_entry" class="control-container">
         <a class="expand-icon" href="#" title="Click to open or close">+</a>
-        <div class="header">Weights <span class="subheader"></span></div>
+        <div class="header">Trace Options <span class="subheader"></span></div>
         <div class='inner-container'>
+            <p>
+                <label for='engine'>Use engine:</label>
+                <select name='engine' id='engine'>
+                    <option value='1'>Moped</option>
+                    <option value='2'>Post*</option>
+                    <option value='3'>Pre*</option>
+                </select>
+            </p>
+            <p>
+                <input type='checkbox' id='view-all' name='view-all' value='false'/>
+                <label for='view-all'>All links</label>
+                <input type='checkbox' id='top-down' name='top-down' value='false'/>
+                <label for='top-down'>Top Down</label>
+                <input type='checkbox' id='view-raw-result' name='view-raw-result' value='false'/>
+                <label for='view-raw-result'>Raw Results</label>
+            </p>
             <form enctype="multipart/form-data" method="post">
                 <div id="weight_outer">
                     <div id="weight_left">
@@ -102,7 +103,6 @@
                         </div>
                     </div>
                 </div>
-                <input class='run' type='submit' value='Recompute'/>
             </form>
         </div>
     </div>

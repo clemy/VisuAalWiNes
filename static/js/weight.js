@@ -90,11 +90,13 @@ function initializeWeightGroup(group) {
 }
 
 function weightListChanged() {
+    /*
     if ($('#weight_list .weight_item').length > 0) {
         $("#weight_entry .subheader").text('Enabled');
     } else {
         $("#weight_entry .subheader").text('');
     }
+    */
 }
 
 function getWeightList() {

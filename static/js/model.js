@@ -19,7 +19,7 @@ function model_init() {
     });
 
     $("#query_entry,#weight_entry form").prop("onclick", null).off("submit");
-    $("#query_entry,#weight_entry form").submit(function (e) {
+    $("#run-validation").click(function (e) {
         e.preventDefault();
         var query = $("#query").val();
         $("#query_entry .subheader").text(query);
@@ -36,6 +36,7 @@ function model_init() {
         socket.emit('doQuery', selected_model, query + " DUAL", options);
         //$("#query_entry").children(".expand-icon").click();
     });
+    $("#run-validation").prop('disabled', true);
 
     $("#view-raw-result").click(function () {
         const view_raw_result = $("#view-raw-result").prop('checked');
@@ -54,6 +55,7 @@ function load_model(data) {
     if (selected_model !== data.name) {
         return;
     }
+    $("#run-validation").prop('disabled', false);
     model_fillGps(data.data);
     model_data = data.data;
     show_queryExamples(model_data.queries);
