@@ -9,3 +9,5 @@ node_modules/
 
 # large data files
 /data/models/nn-net/
+/data/models/Nestable/
+/data/models/Simple/
