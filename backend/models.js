@@ -101,7 +101,7 @@ class Models {
         return network;
     }
 
-    async doQuery(model, query, options) {
+    async doQuery(socket, model, query, options) {
         const mopedPath = path.join(this._binPath, 'moped');
         const topologyFile = path.join(this._modelsPath, model, 'topo.xml');
         const routingFile = path.join(this._modelsPath, model, 'routing.xml');
@@ -114,18 +114,34 @@ class Models {
                     await fsp.writeFile(tmpWeightFile, JSON.stringify(options.weight));
                     parameters = [...parameters, '-w', tmpWeightFile];
                 }
+                var child = null;
                 try {
-                    ({ stdout, stderr } = await execFile(path.join(this._binPath, 'aalwines'),
+                    const childPromise = execFile(path.join(this._binPath, 'aalwines'),
                         parameters,
                         { env: { MOPED_PATH: mopedPath }}
-                    ));
+                    );
+                    child = childPromise.child;
+                    socket.runningQueryProcess = child;
+                    ({ stdout, stderr } = await childPromise);
                 } catch (err) {
-                    console.error('loadModel error', model, err);
+                    if (child.killed) {
+                        console.error('doQuery error cancelled');
+                        throw "Validation cancelled";
+                    }
+                    console.error('doQuery error', model, err);
                     throw err.stderr ? err.stderr : err.toString();
+                } finally {
+                    socket.runningQueryProcess = null;
                 }
             }, { discardDescriptor: true });
         }, { discardDescriptor: true/*, dir: path.join(this._modelsPath, model)*/ });
         return { ...JSON.parse(stdout), raw: stdout };
+    }
+
+    cancelQuery(socket) {
+        if (socket.runningQueryProcess) {
+            socket.runningQueryProcess.kill();
+        }
     }
 }
 

@@ -25,6 +25,8 @@ function model_init() {
         $("#query_entry .subheader").text(query);
         $("#queryresult").text('');
         $("#wait").show(200);
+        $("#cancel-validation").show();
+        $("#run-validation").hide();
         var options = {};
         var weight = getWeightList();
         if (weight) {
@@ -37,6 +39,11 @@ function model_init() {
         //$("#query_entry").children(".expand-icon").click();
     });
     $("#run-validation").prop('disabled', true);
+
+    $("#cancel-validation").click(function (e) {
+        e.preventDefault();
+        socket.emit('cancelQuery');
+    });
 
     $("#view-raw-result").click(function () {
         const view_raw_result = $("#view-raw-result").prop('checked');
@@ -141,6 +148,8 @@ function show_queryExamples(data) {
 
 function show_queryResult(data) {
     console.log(data);
+    $("#cancel-validation").hide();
+    $("#run-validation").show();
     $("#wait").hide(200);
     if ($("#query_result").children(".expand-icon").text() == '+') {
         $("#query_result").children(".expand-icon").click();

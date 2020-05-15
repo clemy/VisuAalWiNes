@@ -15,7 +15,7 @@ const models = require('./backend/models')(modelsPath, binPath, models => {
 
 app.use(express.static(path.join(__dirname, 'static')));
 
-io.on('connect', (socket) => {
+io.on('connect', (socket) => {    
     socket.on('getModelData', async (name) => {
         try {
             const modelData = await models.loadModel(name);
@@ -26,11 +26,14 @@ io.on('connect', (socket) => {
     });
     socket.on('doQuery', async (model, query, options) => {
         try {
-            const queryResult = await models.doQuery(model, query, options);
+            const queryResult = await models.doQuery(socket, model, query, options);
             socket.emit('queryResult', { model: model, query: query, data: queryResult });
         } catch (err) {
             socket.emit('queryResult', { model: model, query: query, error: err.toString() });
         }
+    });
+    socket.on('cancelQuery', async () => {
+        models.cancelQuery(socket);
     });
 
     socket.emit('models', models.models);
