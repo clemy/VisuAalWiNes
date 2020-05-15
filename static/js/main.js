@@ -13,4 +13,6 @@ $(document).ready(function () {
     
     // model_selection is initial UI control
     $("#model_selection").children(".expand-icon").click();
+
+    $("#about").children(".expand-icon").click();
 });

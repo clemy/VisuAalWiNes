@@ -50,6 +50,12 @@ body {
     float: left;
 }
 
+.control-sidebar.right {
+    
+    margin-top: 20px;
+    float: right;
+}
+
 .control-container {
     padding: 0px;
     margin: 0px 0px 15px 0px;
@@ -204,4 +210,11 @@ tr:hover {
     overflow-x: auto;
     tab-size: 2;
     -moz-tab-size: 2;
+}
+
+#about a {
+    color: #0090f3;
+}
+#about ul {
+    padding-left: 20px;
 }
