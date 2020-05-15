@@ -106,7 +106,10 @@ function map_init() {
             currentViewState = viewState;
             deckgl.setProps({viewState: currentViewState});
         },
-        controller: {touchRotate: true},
+        controller: {
+            touchRotate: true,
+            keyboard: false
+        },
 
         pickingRadius: 20,
 
@@ -132,6 +135,16 @@ function map_init() {
             transitionInterpolator: new deck.FlyToInterpolator()
         });
         deckgl.setProps({viewState: currentViewState});
+    });
+
+    document.addEventListener('keydown', function(ev) {
+        if (ev.key == "ArrowDown") {
+            set_current_step(Math.min(current_step_target + 1, usedEdgesCount + 1));
+            ev.stopPropagation();
+        } else if (ev.key == "ArrowUp") {
+            set_current_step(Math.max(current_step_target - 1, 0));
+            ev.stopPropagation();
+        }
     });
 }
 
@@ -181,13 +194,15 @@ function show_simulation(data, doZoom) {
     }
     current_step = 0;
     usedEdgesCount = usedEdges.length;
-    set_current_step(usedEdgesCount);
+    set_current_step(usedEdgesCount + 1);
 }
 
 function set_current_step(step) {
     current_step_target = step;
     // should cancel previous one (performance)
     requestAnimationFrame(animate_current_step);
+    $('.result_step').removeClass('selected');
+    $('#result_step_' + step).addClass('selected');
 }
 
 function animate_current_step(time) {

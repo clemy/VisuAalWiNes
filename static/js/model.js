@@ -167,7 +167,7 @@ function show_queryResult(data) {
                     }
                     return;
                 }
-                result += '<tr onclick="set_current_step(' + step + ')"><td>[' +
+                result += '<tr class="result_step" id="result_step_' + step + '" onclick="set_current_step(' + step + ')"><td>[' +
                     entry.stack + '] -> ' + (entry.router == 'NULL' ? '' : entry.router) +
                     '</td></tr>';
                 if (current_data.routers[entry.router] === undefined) {
