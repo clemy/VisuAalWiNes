@@ -195,4 +195,5 @@ tr:hover {
     white-space: pre;
     overflow-x: auto;
     tab-size: 2;
+    -moz-tab-size: 2;
 }
