@@ -206,6 +206,10 @@ tr:hover {
     outline-style: none;
 }
 
+#weight_list {
+    min-height: 100px;
+}
+
 #rawresult {
     resize: none;
     width: 364px;
