@@ -19,6 +19,12 @@ function model_init() {
     });
 
     $("#query_entry,#weight_entry form").prop("onclick", null).off("submit");
+    $("#query_entry,#weight_entry form").submit(function (e) {
+        e.preventDefault();
+        if ($("#run-validation").is(":visible")) {
+            $("#run-validation").click();
+        }
+    });
     $("#run-validation").click(function (e) {
         e.preventDefault();
         var query = $("#query").val();
