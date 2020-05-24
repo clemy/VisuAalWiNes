@@ -8,8 +8,12 @@ function model_init() {
         selected_model = $("#model").val();
         $("#model_selection .subheader").text(selected_model);
         $("#query_entry .subheader").text('');
-        $("#query").val('');
+        $("#preCondition").val('');
+        $("#path").val('');
+        $("#postCondition").val('');
+        $("#linkFailures").val('');
         $("#queryresult").text('');
+        $("#final_query").val('');
         $("#wait").show(200);
         socket.emit('getModelData', selected_model);
         $("#model_selection").children(".expand-icon").click();
@@ -17,6 +21,8 @@ function model_init() {
             $("#query_entry").children(".expand-icon").click();
         }
     });
+
+    $("#preCondition,#path,#postCondition,#linkFailures").on('input', show_finalQuery);
 
     $("#query_entry,#weight_entry form").prop("onclick", null).off("submit");
     $("#query_entry,#weight_entry form").submit(function (e) {
@@ -27,7 +33,7 @@ function model_init() {
     });
     $("#run-validation").click(function (e) {
         e.preventDefault();
-        var query = $("#query").val();
+        var query = $("#final_query").text();
         $("#query_entry .subheader").text(query);
         $("#queryresult").text('');
         $("#wait").show(200);
@@ -41,7 +47,7 @@ function model_init() {
             options = { ...options, weight };
         }
         options = { ...options, engine: $("#engine").val() };
-        socket.emit('doQuery', selected_model, query + " DUAL", options);
+        socket.emit('doQuery', selected_model, query, options);
         //$("#query_entry").children(".expand-icon").click();
     });
     $("#run-validation").prop('disabled', true);
@@ -145,11 +151,26 @@ function show_queryExamples(data) {
         $("#query-examples").append($("<div>Examples:</div>"));
         for (const query of data) {
             $("#query-examples").append($("<div class='query-example'></div>").click(() => {
-                $("#query").val(query.query);
+                var query_parts = query.query.match("^<([^>]*)>\\s*([^<]*?)\\s*<([^>]*)>\\s*(\\d+)$");
+                if (query_parts) {
+                    $("#preCondition").val(query_parts[1]);
+                    $("#path").val(query_parts[2]);
+                    $("#postCondition").val(query_parts[3]);
+                    $("#linkFailures").val(query_parts[4]);
+                }
+                show_finalQuery();
                 //$("#query_entry form").submit();
             }).text(query.query).attr("title", query.description));
         }
     }
+}
+
+function show_finalQuery() {
+    var final_query = '<' + $('#preCondition').val() + '> ' +
+        $('#path').val() +
+        ' <' + $('#postCondition').val() + '> ' +
+        $('#linkFailures').val() + ' DUAL';
+    $('#final_query').text(final_query);
 }
 
 function show_queryResult(data) {

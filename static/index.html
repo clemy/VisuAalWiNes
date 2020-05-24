@@ -51,8 +51,26 @@
                 <div id="query-examples">
                 </div>
                 <p>
-                    <input type='text' id='query' placeholder='Enter query here'/>
+                    <table>
+                        <tr>
+                            <td><label for='preCondition'>Pre Condition: </label></td>
+                            <td><input type='text' id='preCondition' name='preCondition' placeholder=''/></td>
+                        </tr>
+                        <tr>
+                            <td><label for='path'>Path: </label></td>
+                            <td><input type='text' id='path' name='path' placeholder=''/></td>
+                        </tr>
+                        <tr>
+                            <td><label for='postCondition'>Post Condition: </label></td>
+                            <td><input type='text' id='postCondition' name='postCondition' placeholder=''/></td>
+                        </tr>
+                        <tr>
+                            <td><label for='linkFailures'>Link Failures: </label></td>
+                            <td><input type='text' id='linkFailures' name='linkFailures' placeholder=''/></td>
+                        </tr>
+                    </table>
                 </p>
+                <p id='final_query'></p>
             </form>
         </div>
     </div>

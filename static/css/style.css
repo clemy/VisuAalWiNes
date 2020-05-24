@@ -98,6 +98,10 @@ body {
     background-color: #005c9b;
 }
 
+#query_entry table {
+    width: 100%;
+}
+
 input[type=text] {
     width: 100%;
     box-sizing: border-box;
@@ -130,7 +134,7 @@ input[type=text] {
     position: absolute;
 }
 
-tr:hover {
+#query_result tr:hover {
     background-color: #005c9b;
 }
 
