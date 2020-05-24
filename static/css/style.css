@@ -206,6 +206,19 @@ tr:hover {
     outline-style: none;
 }
 
+.weight_add,.weight_del {
+    float: right;
+    cursor: pointer;
+}
+
+#weight_left .weight_add {
+    display: none;
+}
+
+#weight_right .weight_del {
+    display: none;
+}
+
 #weight_list {
     min-height: 100px;
 }

@@ -44,6 +44,26 @@ function weight_init() {
         }
     });
 
+    $(".weight_add").click(function(evt){
+        var el = evt.target.parentNode;
+        if (el.className == "weight_group") {
+            var newElement = $(el).clone(true);
+            newElement.appendTo("#weight_list");
+            initializeWeightGroup(newElement[0]);
+            weightListChanged();
+        }
+    });
+
+    $(".weight_del").click(function(evt){
+        var el = evt.target.parentNode;
+        if (el.className == "weight_group") {
+            if (el.parentNode.childElementCount > 1) {
+                el.parentNode.removeChild(el);
+                weightListChanged();
+            }
+        }
+    });
+
     var initialWeightGroup = document.getElementById('initial_weight_group');
     initializeWeightGroup(initialWeightGroup);
 }
@@ -78,6 +98,7 @@ function initializeWeightGroup(group) {
             name: 'weights'
         },
         animation: 150,
+        draggable: '.weight_item',
         onSort: evt => {
             weightListChanged();
         }
@@ -105,7 +126,7 @@ function getWeightList() {
     }
     return $('#weight_list .weight_group').map((ix, el) =>
         // return array in array to prevent flattening of jQuery map
-        [$(el).children().map((ix, el) =>
+        [$(el).children('.weight_item').map((ix, el) =>
             ({
                 atom: el.innerText,
                 factor: parseInt($(el).children('input').val())
