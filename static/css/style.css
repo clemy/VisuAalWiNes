@@ -218,3 +218,16 @@ tr:hover {
 #about ul {
     padding-left: 20px;
 }
+
+#about .subheader {
+    font-style: normal;
+    font-size: initial;
+   font-weight: bold;
+    color: #0090f3;
+    text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.5);
+    user-select: none;
+}
+
+#about .subheader a {
+    text-decoration: none;
+}
