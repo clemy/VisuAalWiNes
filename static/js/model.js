@@ -175,7 +175,7 @@ function show_queryResult(data) {
                 if (entry.router === undefined) {
                     if (entry.rule.ops) {
                         entry.rule.ops.forEach(op => {
-                            result += '<tr onclick="set_current_step(' + (step - 1) + ')"><td style="color: green;">&nbsp;&nbsp;&nbsp;' +
+                            result += '<tr onclick="set_current_step(' + (step - 1) + ')"><td class="rule">&nbsp;&nbsp;&nbsp;' +
                             (typeof op === 'string' ? op + '()' : Object.keys(op).map(key => key + '(' + op[key] + ')').join('; '))
                             ')</td></tr>';
                         });

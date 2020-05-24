@@ -95,7 +95,7 @@ body {
 }
 
 .query-example:hover {
-    font-weight: bold;
+    background-color: #005c9b;
 }
 
 input[type=text] {
@@ -131,13 +131,17 @@ input[type=text] {
 }
 
 tr:hover {
-    font-weight: bold;
+    background-color: #005c9b;
 }
 
 .selected {
-    font-weight: bold;
-    font-style: italic;
+    background-color: #0090f3;
 }
+
+.rule {
+    color: #0090f3;
+}
+
 .error-begin {
     font-family: monospace;
 }
@@ -222,7 +226,7 @@ tr:hover {
 #about .subheader {
     font-style: normal;
     font-size: initial;
-   font-weight: bold;
+    font-weight: bold;
     color: #0090f3;
     text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.5);
     user-select: none;
