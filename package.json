@@ -1,25 +1,25 @@
 {
-  "name": "prexvis",
-  "version": "0.1.0",
+  "name": "visuaalwines",
+  "version": "0.2.0",
   "bin": "app.js",
   "private": true,
   "scripts": {
     "start": "node app.js",
-    "pack": "pkg package.json -t latest-linux-x64 && tar -czf prexvis-$npm_package_version.tgz --transform s/^/prexvis-$npm_package_version\\\\// bin data prexvis",
-    "clean": "rm -f prexvis prexvis-$npm_package_version.tgz"
+    "pack": "pkg package.json -t latest-linux-x64 && tar -czf visuaalwines-$npm_package_version.tgz --transform s/^/visuaalwines-$npm_package_version\\\\// bin data visuaalwines",
+    "clean": "rm -f visuaalwines visuaalwines-$npm_package_version.tgz"
   },
-  "description": "Visualization for P-Rex",
+  "description": "Visualization for AalWiNes",
   "main": "app.js",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/clemy/prexvis.git"
+    "url": "git+https://github.com/DEIS-Tools/VisuAalWiNes.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/clemy/prexvis/issues"
+    "url": "https://github.com/DEIS-Tools/VisuAalWiNes/issues"
   },
-  "homepage": "https://github.com/clemy/prexvis#readme",
+  "homepage": "https://github.com/DEIS-Tools/VisuAalWiNes#readme",
   "dependencies": {
     "express": "^4.17.1",
     "socket.io": "^2.3.0",

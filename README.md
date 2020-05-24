@@ -1,10 +1,10 @@
-# prexvis
+# VisuAalWiNes
 
 ## A visualization frontend for the AalWiNes tool
 This project is based on code from the VisuAAL project (github:petergjoel/VisuAAL) by Peter G. Jensen.
 
 ## Quick Start
-Download a binary delivery under https://github.com/clemy/prexvis/releases
+Download a binary delivery under https://github.com/clemy/VisuAalWiNes/releases
 
 ## Requirements
 Necessary if you do not use the binary delivery:
@@ -22,7 +22,7 @@ sudo apt-get install -y nodejs
 sudo apt-get install -y build-essential
 ```
 
-## Usage of prexvis
+## Usage of VisuAalWiNes
 
 ```bash
 # install used npm packages
@@ -57,18 +57,18 @@ Building a package containing a binary delivery can easily be done with the comm
 npm run pack
 ```
 
-The delivery package including aalwines, moped, sample data and the prexvis binary is in:
+The delivery package including aalwines, moped, sample data and the visuaalwines binary is in:
 
-`./prexvis-0.1.0.tgz`
+`./visuaalwines-0.2.0.tgz`
 
-Beside the prexvis tool it includes everything necessary to run it: nodejs, aalwines, moped and sample data.
+Beside the visuaalwines tool it includes everything necessary to run it: nodejs, aalwines, moped and sample data.
 
 Unpack it, run the binary and use your browser to go to http://localhost:3000/
 
 ```bash
-tar -xzvf prexvis-0.1.0.tgz
-cd prexvis-0.1.0
-./prexvis
+tar -xzvf visuaalwines-0.2.0.tgz
+cd visuaalwines-0.2.0
+./visuaalwines
 
 # browse to http://localhost:3000/
 ```

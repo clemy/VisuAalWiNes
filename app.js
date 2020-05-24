@@ -4,8 +4,8 @@ const path = require('path');
 const http = require('http').createServer(app);
 const io = require('socket.io')(http);
 
-console.log('prexvis - Visualization for AaalWiNes');
-console.log('  Version 0.1.0');
+console.log('VisuAalWiNes - Visualization for AaalWiNes');
+console.log('  Version 0.2.0');
 
 const modelsPath = path.join(process.cwd(), 'data', 'models');
 const binPath = path.join(process.cwd(), 'bin');
