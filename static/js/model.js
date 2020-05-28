@@ -33,7 +33,7 @@ function model_init() {
     });
     $("#run-validation").click(function (e) {
         e.preventDefault();
-        var query = $("#final_query").text();
+        var query = $("#final_query").text() + ' DUAL';
         $("#query_entry .subheader").text(query);
         $("#queryresult").text('');
         $("#wait").show(200);
@@ -169,7 +169,7 @@ function show_finalQuery() {
     var final_query = '<' + $('#preCondition').val() + '> ' +
         $('#path').val() +
         ' <' + $('#postCondition').val() + '> ' +
-        $('#linkFailures').val() + ' DUAL';
+        $('#linkFailures').val();
     $('#final_query').text(final_query);
 }
 

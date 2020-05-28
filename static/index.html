@@ -53,19 +53,19 @@
                 <p>
                     <table>
                         <tr>
-                            <td><label for='preCondition'>Pre Condition: </label></td>
+                            <td><label for='preCondition'>Initial header: </label></td>
                             <td><input type='text' id='preCondition' name='preCondition' placeholder=''/></td>
                         </tr>
                         <tr>
-                            <td><label for='path'>Path: </label></td>
+                            <td><label for='path'>Path restriction: </label></td>
                             <td><input type='text' id='path' name='path' placeholder=''/></td>
                         </tr>
                         <tr>
-                            <td><label for='postCondition'>Post Condition: </label></td>
+                            <td><label for='postCondition'>Final header: </label></td>
                             <td><input type='text' id='postCondition' name='postCondition' placeholder=''/></td>
                         </tr>
                         <tr>
-                            <td><label for='linkFailures'>Link Failures: </label></td>
+                            <td><label for='linkFailures'>Max link failures: </label></td>
                             <td><input type='text' id='linkFailures' name='linkFailures' placeholder=''/></td>
                         </tr>
                     </table>
@@ -98,7 +98,7 @@
             <form enctype="multipart/form-data" method="post">
                 <div id="weight_outer">
                     <div id="weight_left">
-                        Requirements of the shortest trace:
+                        Shortest trace specification:
                         <div id="weight_list">
                             <div id="initial_weight_group" class="weight_group" title='Minimize the value of the linear combination of weights in this group. If two traces have the same value, minimize the next group.'>Priority Group<span class="weight_disabled weight_del">-</span><span class="weight_disabled weight_add">+</span></div>
                         </div>
@@ -147,7 +147,8 @@
                     <li>University of Vienna<br />&nbsp;<a href="https://ct.cs.univie.ac.at/">Communication Technologies Group</a>
                     </li>
                 </ul>
-                Have a look at the <a href="https://aalwines.cs.aau.dk/">Tool Website</a>
+                Have a look at the <a href="https://aalwines.cs.aau.dk/">Tool Website</a> & <br />
+                <a href="https://github.com/DEIS-Tools/AalWiNes">Tool and query language documentation</a>
             </p>
         </div>
     </div>

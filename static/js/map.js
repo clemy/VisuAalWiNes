@@ -192,9 +192,9 @@ function show_simulation(data, doZoom) {
         });
         deckgl.setProps({viewState: currentViewState});
     }
-    current_step = 0;
+    current_step = -1;
     usedEdgesCount = usedEdges.length;
-    set_current_step(usedEdgesCount + 1);
+    set_current_step(0);
 }
 
 function set_current_step(step) {
