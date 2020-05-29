@@ -24,6 +24,23 @@ function model_init() {
 
     $("#preCondition,#path,#postCondition,#linkFailures").on('input', show_finalQuery);
 
+    $("#path").focus(function (e) {
+        $("#router_list").show(200);
+    });
+    $("#path").blur(function (e) {
+        $("#router_list").hide(200);
+    });
+    $("#router_list").on('mousedown', function (e) {
+        e.preventDefault();
+    });
+
+    $("#router_list_list").click(function (e) {
+        $("#path").val($("#path").val() + e.target.innerText);
+        //character = "a";
+        //$(document).trigger({ type: 'keypress', which: character.charCodeAt(0) });
+        show_finalQuery();
+    });
+
     $("#query_entry,#weight_entry form").prop("onclick", null).off("submit");
     $("#query_entry,#weight_entry form").submit(function (e) {
         e.preventDefault();
@@ -78,6 +95,7 @@ function load_model(data) {
     model_fillGps(data.data);
     model_data = data.data;
     show_queryExamples(model_data.queries);
+    show_routerList(model_data);
     show_simulation(model_data, true);
     $("#wait").hide(200);
 }
@@ -131,6 +149,11 @@ function model_fillGps(data) {
             data.maxLng = Math.max(data.routers[routerName].lng, data.maxLng);
         }
     );
+}
+
+function show_routerList(data) {
+    $("#router_list_list").empty();
+    $("#router_list_list").append(Object.keys(data.routers).sort().map((routerName) => $("<li>" + routerName + "</li>")));
 }
 
 function add_models(models) {

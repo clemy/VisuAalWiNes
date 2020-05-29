@@ -71,6 +71,10 @@ body {
     font-weight: bold;
 }
 
+.control-container .header_noclick {
+    font-weight: bold;
+}
+
 .control-container .subheader {
     font-weight: normal;
     font-style: italic;
@@ -89,6 +93,10 @@ body {
     display: none;
 }
 
+.control-container .inner-container-always_expanded {
+    margin: 0px 5px 0px 5px;
+}
+
 .query-example {
     margin: 2px 0px 0px 5px;
     font-size: smaller;
@@ -100,6 +108,10 @@ body {
 
 #query_entry table {
     width: 100%;
+}
+
+#router_list {
+    display: none;
 }
 
 input[type=text] {
