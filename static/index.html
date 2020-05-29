@@ -136,11 +136,18 @@
 
 <div class="control-sidebar double-width">
     <div id="router_list" class="control-container">
-        <div class="header_noclick">Routers</div>
+        <div class="header_noclick">Routers & Interfaces</div>
         <div class='inner-container_always_expanded'>
             <p>
                 Click name to paste:
-                <ul id="router_list_list"></ul>
+                <div id="router_outer">
+                    <div id="router_left">
+                        <ul id="router_list_routers"></ul>
+                    </div>
+                    <div id="router_right">
+                        <ul id="router_list_interfaces"></ul>
+                    </div>
+                </div>
             </p>
         </div>
     </div>

@@ -34,7 +34,7 @@ function model_init() {
         e.preventDefault();
     });
 
-    $("#router_list_list").click(function (e) {
+    $("#router_list_routers,#router_list_interfaces").click(function (e) {
         $("#path").val($("#path").val() + e.target.innerText);
         //character = "a";
         //$(document).trigger({ type: 'keypress', which: character.charCodeAt(0) });
@@ -149,8 +149,17 @@ function model_fillGps(data) {
 }
 
 function show_routerList(data) {
-    $("#router_list_list").empty();
-    $("#router_list_list").append(Object.keys(data.routers).sort().map((routerName) => $("<li>" + routerName + "</li>")));
+    $("#router_list_routers").empty();
+    $("#router_list_routers").append(Object.keys(data.routers).sort().map((routerName) => $("<li>" + routerName + "</li>")));
+
+    $("#router_list_interfaces").empty();
+    let interfaces = [];
+    Object.keys(data.routers)
+        .forEach((routerName) => {
+            Array.prototype.push.apply(interfaces, data.routers[routerName].interfaces);
+        });
+    interfaces = [...new Set(interfaces)];
+    $("#router_list_interfaces").append(interfaces.sort().map((ifName) => $("<li>" + ifName + "</li>")));
 }
 
 function add_models(models) {

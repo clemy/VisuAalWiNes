@@ -246,6 +246,20 @@ input[type=text] {
     min-height: 100px;
 }
 
+#router_outer {
+    overflow: hidden;
+    margin-top: 10px;
+}
+
+#router_left {
+    float: left;
+    width: 300px;
+}
+
+#router_right {
+    margin-left: 380px;
+}
+
 #rawresult {
     resize: vertical;
     width: 864px;
