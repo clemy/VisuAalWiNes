@@ -51,9 +51,12 @@ body {
 }
 
 .control-sidebar.right {
-    
     margin-top: 20px;
     float: right;
+}
+
+.control-sidebar.double-width {
+    width: 900px;
 }
 
 .control-container {
@@ -111,6 +114,10 @@ body {
 }
 
 #router_list {
+    display: none;
+}
+
+#raw_result {
     display: none;
 }
 
@@ -240,9 +247,9 @@ input[type=text] {
 }
 
 #rawresult {
-    resize: none;
-    width: 364px;
-    height: 440px;
+    resize: vertical;
+    width: 864px;
+    height: 540px;
     white-space: pre;
     overflow-x: auto;
     tab-size: 2;

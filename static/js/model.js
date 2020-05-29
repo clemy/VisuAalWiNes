@@ -77,14 +77,11 @@ function model_init() {
     $("#view-raw-result").click(function () {
         const view_raw_result = $("#view-raw-result").prop('checked');
         if (view_raw_result) {
-            $("#queryresult").hide(200);
-            $("#rawresult").show(200);
+            $("#raw_result").show(200);
         } else {
-            $("#queryresult").show(200);
-            $("#rawresult").hide(200);
+            $("#raw_result").hide(200);
         }
     });
-    $("#rawresult").hide(200);
 }
 
 function load_model(data) {
