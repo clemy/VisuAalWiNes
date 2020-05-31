@@ -29,6 +29,11 @@ body {
     user-select: none;
 }
 
+.title a {
+    color: #005c9b;
+    text-decoration: none;
+}
+
 .subtitle {
     position: absolute;
     top: 45px;
@@ -297,6 +302,7 @@ input[type=text] {
 #about a {
     color: #0090f3;
 }
+
 #about ul {
     padding-left: 20px;
 }
