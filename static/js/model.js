@@ -217,12 +217,17 @@ function show_queryResult(data) {
     current_data = JSON.parse(JSON.stringify(model_data));
     if (data.error === undefined) {
         var result = '';
-        if (!data.data.answers.Q1.result) {
-            result = '<div>No trace found.</div>';
+        if (data.data.answers.Q1.result === undefined || data.data.answers.Q1.result === null) {
+            result = '<p>Verification was inconclusive.</p>';
+        } else if (data.data.answers.Q1.result === false) {
+            result = '<p>Query is not satisfied.</p>';
+        } else {
+            result = '<p>Query is satisfied:</p>';
         }
         var prevRouter;
         if (data.data.answers.Q1.trace !== undefined && data.data.answers.Q1.trace.length > 0) {
             var step = 0; // step 0 is no active edge
+            result += '<table>';
             data.data.answers.Q1.trace.forEach(entry => {
                 if (entry.router === undefined) {
                     if (entry.rule.ops) {
