@@ -25,10 +25,11 @@ function model_init() {
     $("#preCondition,#path,#postCondition,#linkFailures").on('input', show_finalQuery);
 
     $("#path").focus(function (e) {
-        $("#router_list").show(200);
+        $("#router_list").show(200, set_sidebar_right_visibility);
+        set_sidebar_right_visibility();
     });
     $("#path").blur(function (e) {
-        $("#router_list").hide(200);
+        $("#router_list").hide(200, set_sidebar_right_visibility);
     });
     $("#router_list").on('mousedown', function (e) {
         e.preventDefault();
@@ -77,9 +78,10 @@ function model_init() {
     $("#view-raw-result").click(function () {
         const view_raw_result = $("#view-raw-result").prop('checked');
         if (view_raw_result) {
-            $("#raw_result").show(200);
+            $("#raw_result").show(200, set_sidebar_right_visibility);
+            set_sidebar_right_visibility();
         } else {
-            $("#raw_result").hide(200);
+            $("#raw_result").hide(200, set_sidebar_right_visibility);
         }
     });
 }

@@ -2,6 +2,7 @@ body {
     background-color: #101114;
     margin: 0px;
     font-family: Tahoma, Geneva, sans-serif;
+    overflow: hidden;
 }
 
 #visualization {
@@ -77,8 +78,8 @@ body {
     position: absolute;
 }
 
-.control-sidebar.double-width {
-    width: 900px;
+.control-sidebar.middle {
+    width: calc(100vw - 440px);
 }
 
 .control-container {
@@ -283,8 +284,9 @@ input[type=text] {
 }
 
 #rawresult {
+    box-sizing: border-box;
     resize: vertical;
-    width: 864px;
+    width: 100%;
     height: 540px;
     white-space: pre;
     overflow-x: auto;
