@@ -51,8 +51,10 @@ body {
 }
 
 .control-sidebar.right {
-    margin-top: 20px;
-    float: right;
+    margin: 0px 0px 0px 0px;
+    top: 20px;
+    right: 10px;
+    position: absolute;
 }
 
 .control-sidebar.double-width {
