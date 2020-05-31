@@ -141,9 +141,11 @@ function map_init() {
         if (ev.key == "ArrowDown") {
             set_current_step(Math.min(current_step_target + 1, usedEdgesCount + 1));
             ev.stopPropagation();
+            ev.preventDefault();
         } else if (ev.key == "ArrowUp") {
             set_current_step(Math.max(current_step_target - 1, 0));
             ev.stopPropagation();
+            ev.preventDefault();
         }
     });
 }
