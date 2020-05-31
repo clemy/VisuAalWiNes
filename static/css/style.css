@@ -48,6 +48,26 @@ body {
     overflow-y: auto;
     overflow-x: hidden;
     float: left;
+    max-height: calc(100vh - 82px);
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0, 92, 155, 0.75) rgba(0, 0, 0, 0);
+}
+
+.control-sidebar::-webkit-scrollbar {
+    width: 10px;
+}
+
+.control-sidebar::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0);
+    margin-left: 1px;
+}
+
+.control-sidebar::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 92, 155, 0.75);
+    border-radius: 10px;
+    border: 2px solid rgba(0, 0, 0, 0);
+    background-clip: padding-box;
+    opacity: 0.75;
 }
 
 .control-sidebar.right {
