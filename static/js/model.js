@@ -234,9 +234,12 @@ function show_queryResult(data) {
                     }
                     return;
                 }
-                result += '<tr class="result_step" id="result_step_' + step + '" onclick="set_current_step(' + step + ')"><td>[' +
-                    entry.stack + '] -> ' + (entry.router == 'NULL' ? '' : entry.router) +
-                    '</td></tr>';
+                prevRouterName = prevRouter;
+                result += '<tr class="result_step" id="result_step_' + step + '" onclick="set_current_step(' + step + ')"><td>&lt;' +
+                    entry.stack + '&gt; : [' +
+                    (prevRouter ? prevRouter : '&#x1f30d;') + '#' +
+                    (entry.router == 'NULL' ? '&#x1f30d;' : entry.router) +
+                    ']</td></tr>';
                 if (current_data.routers[entry.router] === undefined) {
                     // skip unknown routers (especially the last NULL router)
                     return;
