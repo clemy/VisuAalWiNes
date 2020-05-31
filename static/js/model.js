@@ -35,13 +35,6 @@ function model_init() {
         e.preventDefault();
     });
 
-    $("#router_list_routers,#router_list_interfaces").click(function (e) {
-        $("#path").val($("#path").val() + e.target.innerText);
-        //character = "a";
-        //$(document).trigger({ type: 'keypress', which: character.charCodeAt(0) });
-        show_finalQuery();
-    });
-
     $("#query_entry,#weight_entry form").prop("onclick", null).off("submit");
     $("#query_entry,#weight_entry form").submit(function (e) {
         e.preventDefault();
@@ -84,6 +77,8 @@ function model_init() {
             $("#raw_result").hide(200, set_sidebar_right_visibility);
         }
     });
+
+    $("#add-interface-to-path").prop('disabled', true);
 }
 
 function load_model(data) {
@@ -152,16 +147,30 @@ function model_fillGps(data) {
 
 function show_routerList(data) {
     $("#router_list_routers").empty();
-    $("#router_list_routers").append(Object.keys(data.routers).sort().map((routerName) => $("<li>" + routerName + "</li>")));
-
+    $("#router_list_routers").append(Object.keys(data.routers).sort().map((routerName) =>
+        $("<li class='router_list_router' id='router_list_router_" + routerName + "' onclick='set_router_list_router(\"" + routerName + "\")'>" + routerName + "</li>")));
     $("#router_list_interfaces").empty();
-    let interfaces = [];
-    Object.keys(data.routers)
-        .forEach((routerName) => {
-            Array.prototype.push.apply(interfaces, data.routers[routerName].interfaces);
-        });
-    interfaces = [...new Set(interfaces)];
-    $("#router_list_interfaces").append(interfaces.sort().map((ifName) => $("<li>" + ifName + "</li>")));
+    $("#add-interface-to-path").prop('disabled', true);
+}
+
+function set_router_list_router(routerName) {
+    $('.router_list_router').removeClass('selected');
+    $('#router_list_router_' + routerName).addClass('selected');
+    $("#router_list_interfaces").empty();
+    $("#router_list_interfaces").append(model_data.routers[routerName].interfaces.sort().map((ifName) =>
+        $("<li class='router_list_interface' id='router_list_interface_" + ifName + "' onclick='set_router_list_interface(\"" + ifName + "\")'>" + ifName + "</li>")));
+    $("#add-interface-to-path").prop('disabled', true);
+}
+
+function set_router_list_interface(ifName) {
+    $('.router_list_interface').removeClass('selected');
+    $('#router_list_interface_' + ifName).addClass('selected');
+    $("#add-interface-to-path").prop('disabled', false).click(e => {
+        $("#path").val($("#path").val() + ifName);
+        $("#path").focus();
+        $("#path")[0].scrollLeft = $("#path")[0].scrollWidth;
+        show_finalQuery();
+    });
 }
 
 function add_models(models) {

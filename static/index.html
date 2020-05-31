@@ -138,17 +138,17 @@
     <div id="router_list" class="control-container">
         <div class="header_noclick">Routers & Interfaces</div>
         <div class='inner-container_always_expanded'>
-            <p>
-                Click name to paste:
-                <div id="router_outer">
-                    <div id="router_left">
-                        <ul id="router_list_routers"></ul>
-                    </div>
-                    <div id="router_right">
-                        <ul id="router_list_interfaces"></ul>
-                    </div>
+            <div id="router_outer">
+                <div id="router_left">
+                    Select a router:
+                    <ul id="router_list_routers"></ul>
                 </div>
-            </p>
+                <div id="router_right">
+                    And then select an interface:
+                    <ul id="router_list_interfaces"></ul>
+                </div>
+            </div>
+            <input id='add-interface-to-path' type='button' value='Append selected interface to route restriction'/>
         </div>
     </div>
 
