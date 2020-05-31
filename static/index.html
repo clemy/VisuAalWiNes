@@ -52,21 +52,21 @@
                 </div>
                 <p>
                     <table>
-                        <tr>
+                        <tr title="Regular expression over MPLS-labels that defines the label-stack of the packet in the beginning of the route.">
                             <td><label for='preCondition'>Initial header: </label></td>
-                            <td><input type='text' id='preCondition' name='preCondition' placeholder=''/></td>
+                            <td><input type='text' id='preCondition' name='preCondition' value='.'/></td>
                         </tr>
-                        <tr>
-                            <td><label for='path'>Path restriction: </label></td>
-                            <td><input type='text' id='path' name='path' placeholder=''/></td>
+                        <tr title="Regular expression over links in the network that defines the allowed routig sequence.">
+                            <td><label for='path'>Route restriction: </label></td>
+                            <td><input type='text' id='path' name='path' value='.*'/></td>
                         </tr>
-                        <tr>
+                        <tr title="Regular expression over MPLS-lables that defines the label-stack of the packet at the end of the route.">
                             <td><label for='postCondition'>Final header: </label></td>
-                            <td><input type='text' id='postCondition' name='postCondition' placeholder=''/></td>
+                            <td><input type='text' id='postCondition' name='postCondition' value='.'/></td>
                         </tr>
-                        <tr>
+                        <tr title="A maximum number of failed links that are allowed in order to enable the routing sequence.">
                             <td><label for='linkFailures'>Max link failures: </label></td>
-                            <td><input type='text' id='linkFailures' name='linkFailures' placeholder=''/></td>
+                            <td><input type='text' id='linkFailures' name='linkFailures' value='0'/></td>
                         </tr>
                     </table>
                 </p>

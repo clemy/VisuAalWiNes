@@ -8,12 +8,12 @@ function model_init() {
         selected_model = $("#model").val();
         $("#model_selection .subheader").text(selected_model);
         $("#query_entry .subheader").text('');
-        $("#preCondition").val('');
-        $("#path").val('');
-        $("#postCondition").val('');
-        $("#linkFailures").val('');
+        $("#preCondition").val('.');
+        $("#path").val('.*');
+        $("#postCondition").val('.');
+        $("#linkFailures").val('0');
         $("#queryresult").text('');
-        $("#final_query").val('');
+        show_finalQuery();
         $("#wait").show(200);
         socket.emit('getModelData', selected_model);
         $("#model_selection").children(".expand-icon").click();
