@@ -21,7 +21,7 @@
 </div>
 
 <div class="title">
-    AalWiNes
+    <a href="https://aalwines.cs.aau.dk/">AalWiNes</a>
 </div>
 <div class="subtitle">
     MPLS Reachability Analysis & Visualization Tool
@@ -51,8 +51,26 @@
                 <div id="query-examples">
                 </div>
                 <p>
-                    <input type='text' id='query' placeholder='Enter query here'/>
+                    <table>
+                        <tr title="Regular expression over MPLS-labels that defines the label-stack of the packet in the beginning of the route.">
+                            <td><label for='preCondition'>Initial header: </label></td>
+                            <td><input type='text' id='preCondition' name='preCondition' value='.'/></td>
+                        </tr>
+                        <tr title="Regular expression over links in the network that defines the allowed routig sequence.">
+                            <td><label for='path'>Route restriction: </label></td>
+                            <td><input type='text' id='path' name='path' value='.*'/></td>
+                        </tr>
+                        <tr title="Regular expression over MPLS-lables that defines the label-stack of the packet at the end of the route.">
+                            <td><label for='postCondition'>Final header: </label></td>
+                            <td><input type='text' id='postCondition' name='postCondition' value='.'/></td>
+                        </tr>
+                        <tr title="A maximum number of failed links that are allowed in order to enable the routing sequence.">
+                            <td><label for='linkFailures'>Max link failures: </label></td>
+                            <td><input type='text' id='linkFailures' name='linkFailures' value='0'/></td>
+                        </tr>
+                    </table>
                 </p>
+                <p id='final_query'></p>
             </form>
         </div>
     </div>
@@ -64,9 +82,9 @@
             <p>
                 <label for='engine'>Use engine:</label>
                 <select name='engine' id='engine'>
-                    <option value='1'>Moped</option>
-                    <option value='2'>Post*</option>
+                    <option value='2' selected='selected'>Post*</option>
                     <option value='3'>Pre*</option>
+                    <option value='1'>Moped</option>
                 </select>
             </p>
             <p>
@@ -80,15 +98,15 @@
             <form enctype="multipart/form-data" method="post">
                 <div id="weight_outer">
                     <div id="weight_left">
-                        Requirements of the shortest trace:
+                        Shortest trace specification:
                         <div id="weight_list">
-                            <div id="initial_weight_group" class="weight_group" title='Minimize the value of the linear combination of weights in this group. If two traces have the same value, minimize the next group.'>Priority Group</div>
+                            <div id="initial_weight_group" class="weight_group" title='Minimize the value of the linear combination of weights in this group. If two traces have the same value, minimize the next group.'>Priority Group<span class="weight_disabled weight_del">-</span><span class="weight_disabled weight_add">+</span></div>
                         </div>
                     </div>
                     <div id="weight_right">
                         Drag from here:
                         <div id="weight_group_template">
-                            <div class="weight_group" title='Minimize the value of the linear combination of weights in this group. If two traces have the same value, minimize the next group.'>Priority Group</div>
+                            <div class="weight_group" title='Minimize the value of the linear combination of weights in this group. If two traces have the same value, minimize the next group.'>Priority Group<span class="weight_disabled weight_del">-</span><span class="weight_disabled weight_add">+</span></div>
                         </div>
                         <div id="weight_templates">
                             <div class="weight_item" title='Defines the number of links in the trace'>hops<input type='text' title='Weight factor for this entry' value='1'/></div>
@@ -111,16 +129,43 @@
         <a class="expand-icon" href="#" title="Click to open or close">+</a>
         <div class="header">Result</div>
         <div class="inner-container">
-            <p id="queryresult"></p>
-            <textarea id="rawresult" readonly="true"></textarea>
+            <div id="queryresult"></div>
         </div>
     </div>
 </div>
 
-<div class="control-sidebar right">
+<div class="control-sidebar middle">
+    <div id="router_list" class="control-container">
+        <div class="header_noclick">Routers & Interfaces</div>
+        <div class='inner-container_always_expanded'>
+            <div id="router_outer">
+                <div id="router_left">
+                    Select a router:
+                    <ul id="router_list_routers"></ul>
+                </div>
+                <div id="router_right">
+                    And then select an interface:
+                    <ul id="router_list_interfaces"></ul>
+                </div>
+            </div>
+            <input id='add-interface-to-path' type='button' value='Append selected interface to route restriction'/>
+        </div>
+    </div>
+
+    <div id="raw_result" class="control-container">
+        <div class="header_noclick">Raw Result</div>
+        <div class='inner-container_always_expanded'>
+            <p>
+                <textarea id="rawresult" readonly="true"></textarea>
+            </p>
+        </div>
+    </div>
+</div>
+
+<div id="sidebar_right" class="control-sidebar right">
     <div id="about" class="control-container">
         <a class="expand-icon" href="#" title="Click to open or close">+</a>
-        <div class="header">About <span class="subheader">AalWiNes</span></div>
+        <div class="header">About <span class="subheader"><a href="https://aalwines.cs.aau.dk/">AalWiNes</a></span></div>
         <div class='inner-container'>
             <p>
                 A tool for MPLS reachability analysis and visualization from:
@@ -129,9 +174,8 @@
                     <li>University of Vienna<br />&nbsp;<a href="https://ct.cs.univie.ac.at/">Communication Technologies Group</a>
                     </li>
                 </ul>
-                Have a look at the:<br />
-                <span><a href="https://whatif-tools.net/">Tool Website</a></span>
-                <span style="float:right"><a href="https://whatif-tools.net/team/">The Team</a></span>
+                Have a look at the <a href="https://aalwines.cs.aau.dk/">Tool Website</a> & <br />
+                <a href="https://github.com/DEIS-Tools/AalWiNes">Tool and query language documentation</a>
             </p>
         </div>
     </div>

@@ -8,8 +8,12 @@ function model_init() {
         selected_model = $("#model").val();
         $("#model_selection .subheader").text(selected_model);
         $("#query_entry .subheader").text('');
-        $("#query").val('');
+        $("#preCondition").val('.');
+        $("#path").val('.*');
+        $("#postCondition").val('.');
+        $("#linkFailures").val('0');
         $("#queryresult").text('');
+        show_finalQuery();
         $("#wait").show(200);
         socket.emit('getModelData', selected_model);
         $("#model_selection").children(".expand-icon").click();
@@ -18,10 +22,29 @@ function model_init() {
         }
     });
 
+    $("#preCondition,#path,#postCondition,#linkFailures").on('input', show_finalQuery);
+
+    $("#path").focus(function (e) {
+        $("#router_list").show(200, set_sidebar_right_visibility);
+        set_sidebar_right_visibility();
+    });
+    $("#path").blur(function (e) {
+        $("#router_list").hide(200, set_sidebar_right_visibility);
+    });
+    $("#router_list").on('mousedown', function (e) {
+        e.preventDefault();
+    });
+
     $("#query_entry,#weight_entry form").prop("onclick", null).off("submit");
+    $("#query_entry,#weight_entry form").submit(function (e) {
+        e.preventDefault();
+        if ($("#run-validation").is(":visible")) {
+            $("#run-validation").click();
+        }
+    });
     $("#run-validation").click(function (e) {
         e.preventDefault();
-        var query = $("#query").val();
+        var query = $("#final_query").text() + ' DUAL';
         $("#query_entry .subheader").text(query);
         $("#queryresult").text('');
         $("#wait").show(200);
@@ -35,7 +58,7 @@ function model_init() {
             options = { ...options, weight };
         }
         options = { ...options, engine: $("#engine").val() };
-        socket.emit('doQuery', selected_model, query + " DUAL", options);
+        socket.emit('doQuery', selected_model, query, options);
         //$("#query_entry").children(".expand-icon").click();
     });
     $("#run-validation").prop('disabled', true);
@@ -48,14 +71,14 @@ function model_init() {
     $("#view-raw-result").click(function () {
         const view_raw_result = $("#view-raw-result").prop('checked');
         if (view_raw_result) {
-            $("#queryresult").hide(200);
-            $("#rawresult").show(200);
+            $("#raw_result").show(200, set_sidebar_right_visibility);
+            set_sidebar_right_visibility();
         } else {
-            $("#queryresult").show(200);
-            $("#rawresult").hide(200);
+            $("#raw_result").hide(200, set_sidebar_right_visibility);
         }
     });
-    $("#rawresult").hide(200);
+
+    $("#add-interface-to-path").prop('disabled', true);
 }
 
 function load_model(data) {
@@ -66,6 +89,7 @@ function load_model(data) {
     model_fillGps(data.data);
     model_data = data.data;
     show_queryExamples(model_data.queries);
+    show_routerList(model_data);
     show_simulation(model_data, true);
     $("#wait").hide(200);
 }
@@ -121,6 +145,34 @@ function model_fillGps(data) {
     );
 }
 
+function show_routerList(data) {
+    $("#router_list_routers").empty();
+    $("#router_list_routers").append(Object.keys(data.routers).sort().map((routerName) =>
+        $("<li class='router_list_router' id='router_list_router_" + routerName + "' onclick='set_router_list_router(\"" + routerName + "\")'>" + routerName + "</li>")));
+    $("#router_list_interfaces").empty();
+    $("#add-interface-to-path").prop('disabled', true);
+}
+
+function set_router_list_router(routerName) {
+    $('.router_list_router').removeClass('selected');
+    $('#router_list_router_' + routerName).addClass('selected');
+    $("#router_list_interfaces").empty();
+    $("#router_list_interfaces").append(model_data.routers[routerName].interfaces.sort().map((ifName) =>
+        $("<li class='router_list_interface' id='router_list_interface_" + ifName + "' onclick='set_router_list_interface(\"" + ifName + "\")'>" + ifName + "</li>")));
+    $("#add-interface-to-path").prop('disabled', true);
+}
+
+function set_router_list_interface(ifName) {
+    $('.router_list_interface').removeClass('selected');
+    $('#router_list_interface_' + ifName).addClass('selected');
+    $("#add-interface-to-path").prop('disabled', false).click(e => {
+        $("#path").val($("#path").val() + ifName);
+        $("#path").focus();
+        $("#path")[0].scrollLeft = $("#path")[0].scrollWidth;
+        show_finalQuery();
+    });
+}
+
 function add_models(models) {
     let data = "";
     for (let i in models) {
@@ -139,11 +191,26 @@ function show_queryExamples(data) {
         $("#query-examples").append($("<div>Examples:</div>"));
         for (const query of data) {
             $("#query-examples").append($("<div class='query-example'></div>").click(() => {
-                $("#query").val(query.query);
+                var query_parts = query.query.match("^<([^>]*)>\\s*([^<]*?)\\s*<([^>]*)>\\s*(\\d+)$");
+                if (query_parts) {
+                    $("#preCondition").val(query_parts[1]);
+                    $("#path").val(query_parts[2]);
+                    $("#postCondition").val(query_parts[3]);
+                    $("#linkFailures").val(query_parts[4]);
+                }
+                show_finalQuery();
                 //$("#query_entry form").submit();
             }).text(query.query).attr("title", query.description));
         }
     }
+}
+
+function show_finalQuery() {
+    var final_query = '<' + $('#preCondition').val() + '> ' +
+        $('#path').val() +
+        ' <' + $('#postCondition').val() + '> ' +
+        $('#linkFailures').val();
+    $('#final_query').text(final_query);
 }
 
 function show_queryResult(data) {
@@ -159,26 +226,34 @@ function show_queryResult(data) {
     current_data = JSON.parse(JSON.stringify(model_data));
     if (data.error === undefined) {
         var result = '';
-        if (!data.data.answers.Q1.result) {
-            result = '<div>No trace found.</div>';
+        if (data.data.answers.Q1.result === undefined || data.data.answers.Q1.result === null) {
+            result = '<p>Verification was inconclusive.</p>';
+        } else if (data.data.answers.Q1.result === false) {
+            result = '<p>Query is not satisfied.</p>';
+        } else {
+            result = '<p>Query is satisfied:</p>';
         }
         var prevRouter;
         if (data.data.answers.Q1.trace !== undefined && data.data.answers.Q1.trace.length > 0) {
             var step = 0; // step 0 is no active edge
+            result += '<table>';
             data.data.answers.Q1.trace.forEach(entry => {
                 if (entry.router === undefined) {
                     if (entry.rule.ops) {
                         entry.rule.ops.forEach(op => {
-                            result += '<tr onclick="set_current_step(' + (step - 1) + ')"><td style="color: green;">&nbsp;&nbsp;&nbsp;' +
+                            result += '<tr onclick="set_current_step(' + (step - 1) + ')"><td class="rule">&nbsp;&nbsp;&nbsp;' +
                             (typeof op === 'string' ? op + '()' : Object.keys(op).map(key => key + '(' + op[key] + ')').join('; '))
                             ')</td></tr>';
                         });
                     }
                     return;
                 }
-                result += '<tr class="result_step" id="result_step_' + step + '" onclick="set_current_step(' + step + ')"><td>[' +
-                    entry.stack + '] -> ' + (entry.router == 'NULL' ? '' : entry.router) +
-                    '</td></tr>';
+                prevRouterName = prevRouter;
+                result += '<tr class="result_step" id="result_step_' + step + '" onclick="set_current_step(' + step + ')"><td>&lt;' +
+                    entry.stack + '&gt; : [' +
+                    (prevRouter ? prevRouter : '&#x1f30d;') + '#' +
+                    (entry.router == 'NULL' ? '&#x1f30d;' : entry.router) +
+                    ']</td></tr>';
                 if (current_data.routers[entry.router] === undefined) {
                     // skip unknown routers (especially the last NULL router)
                     return;

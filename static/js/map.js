@@ -141,9 +141,11 @@ function map_init() {
         if (ev.key == "ArrowDown") {
             set_current_step(Math.min(current_step_target + 1, usedEdgesCount + 1));
             ev.stopPropagation();
+            ev.preventDefault();
         } else if (ev.key == "ArrowUp") {
             set_current_step(Math.max(current_step_target - 1, 0));
             ev.stopPropagation();
+            ev.preventDefault();
         }
     });
 }
@@ -192,9 +194,9 @@ function show_simulation(data, doZoom) {
         });
         deckgl.setProps({viewState: currentViewState});
     }
-    current_step = 0;
+    current_step = -1;
     usedEdgesCount = usedEdges.length;
-    set_current_step(usedEdgesCount + 1);
+    set_current_step(0);
 }
 
 function set_current_step(step) {

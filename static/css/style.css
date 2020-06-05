@@ -2,6 +2,7 @@ body {
     background-color: #101114;
     margin: 0px;
     font-family: Tahoma, Geneva, sans-serif;
+    overflow: hidden;
 }
 
 #visualization {
@@ -28,6 +29,11 @@ body {
     user-select: none;
 }
 
+.title a {
+    color: #005c9b;
+    text-decoration: none;
+}
+
 .subtitle {
     position: absolute;
     top: 45px;
@@ -48,12 +54,37 @@ body {
     overflow-y: auto;
     overflow-x: hidden;
     float: left;
+    max-height: calc(100vh - 82px);
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0, 92, 155, 0.75) rgba(0, 0, 0, 0);
+}
+
+.control-sidebar::-webkit-scrollbar {
+    width: 10px;
+}
+
+.control-sidebar::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0);
+    margin-left: 1px;
+}
+
+.control-sidebar::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 92, 155, 0.75);
+    border-radius: 10px;
+    border: 2px solid rgba(0, 0, 0, 0);
+    background-clip: padding-box;
+    opacity: 0.75;
 }
 
 .control-sidebar.right {
-    
-    margin-top: 20px;
-    float: right;
+    margin: 0px 0px 0px 0px;
+    top: 20px;
+    right: 10px;
+    position: absolute;
+}
+
+.control-sidebar.middle {
+    width: calc(100vw - 440px);
 }
 
 .control-container {
@@ -68,6 +99,10 @@ body {
 }
 
 .control-container .header {
+    font-weight: bold;
+}
+
+.control-container .header_noclick {
     font-weight: bold;
 }
 
@@ -89,13 +124,33 @@ body {
     display: none;
 }
 
+.control-container .inner-container-always_expanded {
+    margin: 0px 5px 0px 5px;
+}
+
 .query-example {
     margin: 2px 0px 0px 5px;
     font-size: smaller;
 }
 
 .query-example:hover {
-    font-weight: bold;
+    background-color: #005c9b;
+}
+
+#query_entry table {
+    width: 100%;
+}
+
+#final_query {
+    word-wrap: break-word;
+}
+
+#router_list {
+    display: none;
+}
+
+#raw_result {
+    display: none;
 }
 
 input[type=text] {
@@ -130,14 +185,22 @@ input[type=text] {
     position: absolute;
 }
 
-tr:hover {
-    font-weight: bold;
+#query_result tr:hover:not(.selected) {
+    background-color: #005c9b;
+}
+
+#router_list_routers li:hover:not(.selected), #router_list_interfaces li:hover:not(.selected) {
+    background-color: #005c9b;
 }
 
 .selected {
-    font-weight: bold;
-    font-style: italic;
+    background-color: #0090f3;
 }
+
+.rule {
+    color: #0090f3;
+}
+
 .error-begin {
     font-family: monospace;
 }
@@ -202,10 +265,42 @@ tr:hover {
     outline-style: none;
 }
 
+.weight_add,.weight_del {
+    float: right;
+    cursor: pointer;
+}
+
+#weight_left .weight_add {
+    display: none;
+}
+
+#weight_right .weight_del {
+    display: none;
+}
+
+#weight_list {
+    min-height: 100px;
+}
+
+#router_outer {
+    overflow: hidden;
+    margin-top: 10px;
+}
+
+#router_left {
+    float: left;
+    width: 300px;
+}
+
+#router_right {
+    margin-left: 380px;
+}
+
 #rawresult {
-    resize: none;
-    width: 364px;
-    height: 440px;
+    box-sizing: border-box;
+    resize: vertical;
+    width: 100%;
+    height: 540px;
     white-space: pre;
     overflow-x: auto;
     tab-size: 2;
@@ -215,6 +310,20 @@ tr:hover {
 #about a {
     color: #0090f3;
 }
+
 #about ul {
     padding-left: 20px;
+}
+
+#about .subheader {
+    font-style: normal;
+    font-size: initial;
+    font-weight: bold;
+    color: #0090f3;
+    text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.5);
+    user-select: none;
+}
+
+#about .subheader a {
+    text-decoration: none;
 }

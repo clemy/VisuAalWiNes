@@ -1,8 +1,8 @@
 node_modules/
 
 # files from build
-/prexvis
-/prexvis-*.tgz
+/visuaalwines
+/visuaalwines-*.tgz
 
 # cache files
 /data/models/*/net.json
