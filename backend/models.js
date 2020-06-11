@@ -18,19 +18,9 @@ class Models {
                 console.error('Error during readdir', err);
                 var items = [];
             }
-            const models = items.filter(entry => entry.isDirectory()).map(entry => entry.name).sort(function(a, b){
-                if (b == "DemoNet"){
-                    return 1;
-                } else if (a < b){
-                    return -1;
-                } else if (a > b){
-                    return 1;
-                }
-                return 0;
-            });
+            const models = items.filter(entry => entry.isDirectory()).map(entry => entry.name).sort();
             if (models.length !== this._models.length || models.some((value, index) => value !== this._models[index])) {
-                // if array changed
-
+                // if array change
                 this._models = models;
                 this._cb(this._models);
             }
