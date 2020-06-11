@@ -1,6 +1,0 @@
-[
-    {
-        "description": "Find a trace from Hradec_Kralove to Ceska_Trebova with 0 failed links.",
-        "query": "<.> [.#Hradec_Kralove] .* [Ceska_Trebova#.] <.> 0"
-    }
-]
