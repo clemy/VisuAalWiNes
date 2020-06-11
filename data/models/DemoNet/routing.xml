@@ -81,7 +81,7 @@
           <te-groups>
             <te-group>
               <routes>
-                <route to="in3">
+                <route to="in4">
                   <actions>
                     <action arg="42" type="swap"/>
                   </actions>
@@ -120,13 +120,13 @@
             </te-group>
           </te-groups>
         </destination>
-        <destination from="in2" label="42">
+        <destination from="in4" label="43">
           <te-groups>
             <te-group>
               <routes>
                 <route to="eg0">
                   <actions>
-                    <action arg="43" type="swap"/>
+                    <action arg="44" type="swap"/>
                   </actions>
                 </route>
               </routes>
@@ -157,6 +157,19 @@
                 <route to="in3">
                   <actions>
                     <action type="pop"/>
+                  </actions>
+                </route>
+              </routes>
+            </te-group>
+          </te-groups>
+        </destination>
+        <destination from="in2" label="42">
+          <te-groups>
+            <te-group>
+              <routes>
+                <route to="in3">
+                  <actions>
+                    <action arg="43" type="swap"/>
                   </actions>
                 </route>
               </routes>
