@@ -143,6 +143,7 @@ body {
 
 #final_query {
     word-wrap: break-word;
+    display: none;
 }
 
 #router_list {
