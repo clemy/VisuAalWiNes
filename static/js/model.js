@@ -1,5 +1,6 @@
 let selected_model;
 let model_data;
+let view_interface_names = false;
 
 function model_init() {
     $("#model_selection form").prop("onclick", null).off("submit");
@@ -66,6 +67,10 @@ function model_init() {
     $("#cancel-validation").click(function (e) {
         e.preventDefault();
         socket.emit('cancelQuery');
+    });
+
+    $("#view-interface-names").click(function () {
+        view_interface_names = $("#view-interface-names").prop('checked');
     });
 
     $("#view-raw-result").click(function () {
@@ -292,8 +297,8 @@ function show_queryResult(data) {
                 }
                 result += '<tr class="result_step" id="result_step_' + step + '" onclick="set_current_step(' + step + ')"><td>&lt;' +
                     entry.stack + '&gt; : [' +
-                    (entry.from_router == 'NULL' ? '&#x1f30d;' : entry.from_router) + '.' + entry.from_interface + '#' +
-                    (entry.to_router == 'NULL' ? '&#x1f30d;' : entry.to_router) + '.' + entry.to_interface +
+                    (entry.from_router == 'NULL' ? '&#x1f30d;' : entry.from_router) + (view_interface_names ? ('.' + entry.from_interface) : '') + '#' +
+                    (entry.to_router == 'NULL' ? '&#x1f30d;' : entry.to_router) + (view_interface_names ? ('.' + entry.to_interface) : '') +
                     ']</td></tr>';
                 if (current_data.routers[entry.to_router] === undefined) {
                     // skip unknown routers (especially the last NULL router)
