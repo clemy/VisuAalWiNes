@@ -201,6 +201,10 @@ input[type=text] {
     position: absolute;
 }
 
+#result_query_string {
+    font-size: smaller;
+}
+
 #query_result table {
     font-size: smaller;
 }

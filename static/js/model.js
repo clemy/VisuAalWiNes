@@ -270,6 +270,7 @@ function show_queryResult(data) {
     if ($("#query_result").children(".expand-icon").text() == '+') {
         $("#query_result").children(".expand-icon").click();
     }
+    $("#result_query_string").text("Query: " + data.query.replace(/ DUAL$/, ""));
     $("#queryresult").empty();
     // deep copy
     current_data = JSON.parse(JSON.stringify(model_data));
@@ -278,9 +279,9 @@ function show_queryResult(data) {
         if (data.data.answers.Q1.result === undefined || data.data.answers.Q1.result === null) {
             result = '<p>Verification was inconclusive.</p>';
         } else if (data.data.answers.Q1.result === false) {
-            result = '<p>Query is not satisfied.</p>';
+            result = '<p>is not satisfied.</p>';
         } else {
-            result = '<p>Query is satisfied:</p>';
+            result = '<p>is satisfied:</p>';
         }
         if (data.data.answers.Q1.trace !== undefined && data.data.answers.Q1.trace.length > 0) {
             var step = 0; // step 0 is no active edge
