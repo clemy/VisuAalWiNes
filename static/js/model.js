@@ -233,12 +233,11 @@ function show_queryResult(data) {
         } else {
             result = '<p>Query is satisfied:</p>';
         }
-        var prevRouter;
         if (data.data.answers.Q1.trace !== undefined && data.data.answers.Q1.trace.length > 0) {
             var step = 0; // step 0 is no active edge
             result += '<table>';
             data.data.answers.Q1.trace.forEach(entry => {
-                if (entry.router === undefined) {
+                if (entry.to_router === undefined) {
                     if (entry.rule.ops) {
                         entry.rule.ops.forEach(op => {
                             result += '<tr onclick="set_current_step(' + (step - 1) + ')"><td class="rule">&nbsp;&nbsp;&nbsp;' +
@@ -248,28 +247,26 @@ function show_queryResult(data) {
                     }
                     return;
                 }
-                prevRouterName = prevRouter;
                 result += '<tr class="result_step" id="result_step_' + step + '" onclick="set_current_step(' + step + ')"><td>&lt;' +
                     entry.stack + '&gt; : [' +
-                    (prevRouter ? prevRouter : '&#x1f30d;') + '#' +
-                    (entry.router == 'NULL' ? '&#x1f30d;' : entry.router) +
+                    (entry.from_router == 'NULL' ? '&#x1f30d;' : entry.from_router) + '.' + entry.from_interface + '#' +
+                    (entry.to_router == 'NULL' ? '&#x1f30d;' : entry.to_router) + '.' + entry.to_interface +
                     ']</td></tr>';
-                if (current_data.routers[entry.router] === undefined) {
+                if (current_data.routers[entry.to_router] === undefined) {
                     // skip unknown routers (especially the last NULL router)
                     return;
                 }
-                if (current_data.routers[entry.router].mode === undefined) {
-                    current_data.routers[entry.router].mode = step;
+                if (current_data.routers[entry.to_router].mode === undefined) {
+                    current_data.routers[entry.to_router].mode = step;
                 }
-                if (prevRouter !== undefined) {
-                    if (current_data.routers[prevRouter].usedTargets === undefined) {
-                        current_data.routers[prevRouter].usedTargets = [];
-                        current_data.routers[prevRouter].traceInfo = [];
+                if (current_data.routers[entry.from_router] !== undefined) {
+                    if (current_data.routers[entry.from_router].usedTargets === undefined) {
+                        current_data.routers[entry.from_router].usedTargets = [];
+                        current_data.routers[entry.from_router].traceInfo = [];
                     }
-                    current_data.routers[prevRouter].usedTargets.push(entry.router);
-                    current_data.routers[prevRouter].traceInfo.push({ target: entry.router, step });
+                    current_data.routers[entry.from_router].usedTargets.push(entry.to_router);
+                    current_data.routers[entry.from_router].traceInfo.push({ target: entry.to_router, step });
                 }
-                prevRouter = entry.router;
                 step++;
             });
             result += '</table>';
