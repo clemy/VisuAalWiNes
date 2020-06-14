@@ -8,6 +8,6 @@ node_modules/
 /data/models/*/net.json
 
 # large data files
-/data/models/nn-net/
-/data/models/Nestable/
-/data/models/Simple/
+!/data/models/
+/data/models/*
+!/data/models/>DemoNet<

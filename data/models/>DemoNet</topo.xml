@@ -1,0 +1,79 @@
+<network>
+  <routers>
+    <router name="V0" latitude="57.0116" longitude="9.99433" >
+      <interfaces>
+        <interface name="eg0"/>
+        <interface name="in1"/>
+        <interface name="in2"/>
+      </interfaces>
+    </router>
+    <router name="V1" latitude="57.0087" longitude="9.99433" >
+      <interfaces>
+        <interface name="eg0"/>
+        <interface name="in0"/>
+        <interface name="in3"/>
+      </interfaces>
+    </router>
+    <router name="V2" latitude="57.011595" longitude="10.003951" >
+      <interfaces>
+        <interface name="eg0"/>
+        <interface name="in3"/>
+        <interface name="in4"/>
+        <interface name="in0"/>
+      </interfaces>
+    </router>
+    <router name="V3" latitude="57.0087" longitude="10.004" >
+      <interfaces>
+        <interface name="eg0"/>
+        <interface name="in1"/>
+        <interface name="in4"/>
+        <interface name="in2"/>
+      </interfaces>
+    </router>
+    <router name="V4" latitude="57.0100" longitude="10.0088" >
+      <interfaces>
+        <interface name="eg0"/>
+        <interface name="in2"/>
+        <interface name="in3"/>
+      </interfaces>
+    </router>
+  </routers>
+  <links>
+    <link>
+      <sides>
+        <shared_interface interface="in1" router="V0"/>
+        <shared_interface interface="in0" router="V1"/>
+      </sides>
+    </link>
+    <link>
+      <sides>
+        <shared_interface interface="in2" router="V0"/>
+        <shared_interface interface="in0" router="V2"/>
+      </sides>
+    </link>
+    <link>
+      <sides>
+        <shared_interface interface="in3" router="V1"/>
+        <shared_interface interface="in1" router="V3"/>
+      </sides>
+    </link>
+    <link>
+      <sides>
+        <shared_interface interface="in3" router="V2"/>
+        <shared_interface interface="in2" router="V3"/>
+      </sides>
+    </link>
+    <link>
+      <sides>
+        <shared_interface interface="in4" router="V2"/>
+        <shared_interface interface="in2" router="V4"/>
+      </sides>
+    </link>
+    <link>
+      <sides>
+        <shared_interface interface="in4" router="V3"/>
+        <shared_interface interface="in3" router="V4"/>
+      </sides>
+    </link>
+  </links>
+</network>

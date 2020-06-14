@@ -20,7 +20,7 @@ class Models {
             }
             const models = items.filter(entry => entry.isDirectory()).map(entry => entry.name).sort();
             if (models.length !== this._models.length || models.some((value, index) => value !== this._models[index])) {
-                // if array changed
+                // if array change
                 this._models = models;
                 this._cb(this._models);
             }
