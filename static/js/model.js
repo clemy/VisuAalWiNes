@@ -147,26 +147,54 @@ function model_fillGps(data) {
 
 function show_routerList(data) {
     $("#router_list_routers").empty();
+    $("#router_list_routers").append(
+        $("<li class='router_list_router' id='router_list_router_ANYROUTER' onclick='set_router_list_anyrouter()'>Any Router [.]</li>"));
     $("#router_list_routers").append(Object.keys(data.routers).sort().map((routerName) =>
         $("<li class='router_list_router' id='router_list_router_" + routerName + "' onclick='set_router_list_router(\"" + routerName + "\")'>" + routerName + "</li>")));
     $("#router_list_interfaces").empty();
     $("#add-interface-to-path").prop('disabled', true);
+    set_router_list_anyrouter();
+}
+
+function set_router_list_anyrouter() {
+    $('.router_list_router').removeClass('selected');
+    $('#router_list_router_ANYROUTER').addClass('selected');
+    $("#router_list_interfaces").empty();
+    $("#add-interface-to-path").prop('disabled', false).val('Append selected router to route restriction').off('click').click(e => {
+        $("#path").val($("#path").val() + '.');
+        $("#path").focus();
+        $("#path")[0].scrollLeft = $("#path")[0].scrollWidth;
+        show_finalQuery();
+    });
+}
+
+function quote_if_necessary(name) {
+    if (name.match(/[^a-zA-Z0-9\_\-]/) === null) {
+        return name;
+    }
+    return "'" + name.replace(/('|\\)/g, "\\$1") + "'";
 }
 
 function set_router_list_router(routerName) {
     $('.router_list_router').removeClass('selected');
-    $('#router_list_router_' + routerName).addClass('selected');
+    $('#router_list_router_' + routerName.replace(/(:|\.|\[|\]|,|=|@|\/)/g, "\\$1")).addClass('selected');
     $("#router_list_interfaces").empty();
     $("#router_list_interfaces").append(model_data.routers[routerName].interfaces.sort().map((ifName) =>
-        $("<li class='router_list_interface' id='router_list_interface_" + ifName + "' onclick='set_router_list_interface(\"" + ifName + "\")'>" + ifName + "</li>")));
-    $("#add-interface-to-path").prop('disabled', true);
+        $("<li class='router_list_interface' id='router_list_interface_" + ifName + "' onclick='set_router_list_interface(\"" + routerName + "\", \"" + ifName + "\")'>" + ifName + "</li>")));
+    $("#add-interface-to-path").prop('disabled', false).val('Append selected router to route restriction').off('click').click(e => {
+        $("#path").val($("#path").val() + quote_if_necessary(routerName));
+        $("#path").focus();
+        $("#path")[0].scrollLeft = $("#path")[0].scrollWidth;
+        show_finalQuery();
+    });
 }
 
-function set_router_list_interface(ifName) {
+function set_router_list_interface(routerName, ifName) {
     $('.router_list_interface').removeClass('selected');
-    $('#router_list_interface_' + ifName).addClass('selected');
-    $("#add-interface-to-path").prop('disabled', false).click(e => {
-        $("#path").val($("#path").val() + ifName);
+    $('#router_list_interface_' + ifName.replace(/(:|\.|\[|\]|,|=|@|\/)/g, "\\$1")).addClass('selected');
+    $("#add-interface-to-path").prop('disabled', false).val('Append selected interface to route restriction').off('click').click(e => {
+        var finalName = quote_if_necessary(routerName) + "." + quote_if_necessary(ifName);
+        $("#path").val($("#path").val() + finalName);
         $("#path").focus();
         $("#path")[0].scrollLeft = $("#path")[0].scrollWidth;
         show_finalQuery();
