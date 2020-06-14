@@ -48,7 +48,7 @@ body {
 }
 
 .control-sidebar {
-    width: 400px;
+    width: 450px;
     margin: 82px 10px 0px 10px;
     padding: 0px;
     overflow-y: auto;
@@ -84,7 +84,7 @@ body {
 }
 
 .control-sidebar.middle {
-    width: calc(100vw - 440px);
+    width: calc(100vw - 490px);
 }
 
 .control-container {
@@ -141,6 +141,14 @@ body {
     width: 100%;
 }
 
+#query_entry tr td {
+    white-space: nowrap;
+}
+
+#query_entry tr td:last-child {
+    width: 100%;
+}
+
 #final_query {
     word-wrap: break-word;
     display: none;
@@ -157,6 +165,13 @@ body {
 input[type=text] {
     width: 100%;
     box-sizing: border-box;
+}
+
+#query_entry textarea {
+    width: 100%;
+    box-sizing: border-box;
+    resize: vertical;
+    overflow-x: auto;
 }
 
 #run-validation {
@@ -184,6 +199,10 @@ input[type=text] {
     top: 10px;
     left:360px;
     position: absolute;
+}
+
+#query_result table {
+    font-size: smaller;
 }
 
 #query_result tr:hover:not(.selected) {

@@ -239,6 +239,21 @@ function show_finalQuery() {
         ' <' + $('#postCondition').val() + '> ' +
         $('#linkFailures').val();
     $('#final_query').text(final_query);
+
+    adapt_TextArea_Height(document.getElementById("preCondition"));
+    adapt_TextArea_Height(document.getElementById("path"));
+    adapt_TextArea_Height(document.getElementById("postCondition"));
+}
+
+function adapt_TextArea_Height(el) {
+    const origHeight = el.style.height;
+    el.style.height = "1px";
+    const newHeight = 2 + el.scrollHeight;
+    if (newHeight <= 2) {
+        el.style.height = origHeight;
+    } else {
+        el.style.height = newHeight + "px";
+    }
 }
 
 function show_queryResult(data) {
