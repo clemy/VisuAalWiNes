@@ -13,6 +13,7 @@ function model_init() {
         $("#path").val('.*');
         $("#postCondition").val('.');
         $("#linkFailures").val('0');
+        $("#result_query_string").text('');
         $("#queryresult").text('');
         show_finalQuery();
         $("#wait").show(200);
@@ -48,6 +49,7 @@ function model_init() {
         var query = $("#final_query").text();
         $("#query_entry .subheader").text(query);
         query += ' ' + $("#sim-mode").val();
+        $("#result_query_string").text('');
         $("#queryresult").text('');
         $("#wait").show(200);
         $("#cancel-validation").show();
