@@ -172,7 +172,7 @@ function quote_if_necessary(name) {
     if (name.match(/[^a-zA-Z0-9\_\-]/) === null) {
         return name;
     }
-    return '"' + name + '"';
+    return "'" + name.replace(/('|\\)/g, "\\$1") + "'";
 }
 
 function set_router_list_router(routerName) {
