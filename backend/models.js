@@ -108,7 +108,7 @@ class Models {
         var stdout, stderr;
         await tmp.withFile(async ({ path: tmpQueryFile }) => {
             await fsp.writeFile(tmpQueryFile, query);
-            let parameters = ['--topology', topologyFile, '--routing', routingFile, '-e', options.engine, '-t', '-q', tmpQueryFile];
+            let parameters = ['--topology', topologyFile, '--routing', routingFile, '-e', options.engine, '-r', options.reduction, '-t', '-q', tmpQueryFile];
             await tmp.withFile(async ({ path: tmpWeightFile }) => {
                 if (options.weight) {
                     await fsp.writeFile(tmpWeightFile, JSON.stringify(options.weight));

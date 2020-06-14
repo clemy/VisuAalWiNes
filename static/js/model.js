@@ -45,8 +45,9 @@ function model_init() {
     });
     $("#run-validation").click(function (e) {
         e.preventDefault();
-        var query = $("#final_query").text() + ' DUAL';
+        var query = $("#final_query").text();
         $("#query_entry .subheader").text(query);
+        query += ' ' + $("#sim-mode").val();
         $("#queryresult").text('');
         $("#wait").show(200);
         $("#cancel-validation").show();
@@ -58,7 +59,7 @@ function model_init() {
             $("#engine").val(2);
             options = { ...options, weight };
         }
-        options = { ...options, engine: $("#engine").val() };
+        options = { ...options, engine: $("#engine").val(), reduction: $("#reduction").val() };
         socket.emit('doQuery', selected_model, query, options);
         //$("#query_entry").children(".expand-icon").click();
     });
