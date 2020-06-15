@@ -253,11 +253,11 @@ input[type=text] {
 
 #weight_left {
     float: left;
-    width: 150px;
+    width: 200px;
 }
 
 #weight_right {
-    margin-left: 220px;
+    margin-left: 240px;
 }
 
 .weight_group {
