@@ -1,20 +1,20 @@
 <network>
   <routers>
-    <router name="V0" latitude="57.0116" longitude="9.99433" >
+    <router name="V0" latitude="51.314600" longitude="-77.809112" >
       <interfaces>
         <interface name="eg0"/>
         <interface name="in1"/>
         <interface name="in2"/>
       </interfaces>
     </router>
-    <router name="V1" latitude="57.0087" longitude="9.99433" >
+    <router name="V1" latitude="3.473198" longitude="-77.809112" >
       <interfaces>
         <interface name="eg0"/>
         <interface name="in0"/>
         <interface name="in3"/>
       </interfaces>
     </router>
-    <router name="V2" latitude="57.011595" longitude="10.003951" >
+    <router name="V2" latitude="51.314600" longitude="17.946928" >
       <interfaces>
         <interface name="eg0"/>
         <interface name="in3"/>
@@ -22,7 +22,7 @@
         <interface name="in0"/>
       </interfaces>
     </router>
-    <router name="V3" latitude="57.0087" longitude="10.004" >
+    <router name="V3" latitude="3.473198" longitude="17.946928" >
       <interfaces>
         <interface name="eg0"/>
         <interface name="in1"/>
@@ -30,7 +30,7 @@
         <interface name="in2"/>
       </interfaces>
     </router>
-    <router name="V4" latitude="57.0100" longitude="10.0088" >
+    <router name="V4" latitude="38.152683" longitude="65.993671" >
       <interfaces>
         <interface name="eg0"/>
         <interface name="in2"/>
