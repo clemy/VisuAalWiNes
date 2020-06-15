@@ -286,11 +286,11 @@ function show_queryResult(data) {
     if (data.error === undefined) {
         var result = '';
         if (data.data.answers.Q1.result === undefined || data.data.answers.Q1.result === null) {
-            result = '<p>Verification was inconclusive.</p>';
+            result = '<p class="inconclusive">Verification was inconclusive.</p>';
         } else if (data.data.answers.Q1.result === false) {
-            result = '<p>is not satisfied.</p>';
+            result = '<p class="not-satisfied">is not satisfied.</p>';
         } else {
-            result = '<p>is satisfied:</p>';
+            result = '<p class="satisfied">is satisfied with witness trace:</p>';
         }
         if (data.data.answers.Q1.trace !== undefined && data.data.answers.Q1.trace.length > 0) {
             var step = 0; // step 0 is no active edge

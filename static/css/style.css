@@ -201,16 +201,24 @@ input[type=text] {
     position: absolute;
 }
 
-#result_query_string {
-    font-size: smaller;
-}
-
-#query_result table {
+#query_result .inner-container {
     font-size: smaller;
 }
 
 #query_result tr:hover:not(.selected) {
     background-color: #005c9b;
+}
+
+#query_result .satisfied {
+    color: lightgreen;
+}
+
+#query_result .not-satisfied {
+    color: red;
+}
+
+#query_result .inconclusive {
+    color: yellow;
 }
 
 #router_list_routers li:hover:not(.selected), #router_list_interfaces li:hover:not(.selected) {
