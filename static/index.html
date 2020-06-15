@@ -80,13 +80,13 @@
         <div class="header">Trace Options <span class="subheader"></span></div>
         <div class='inner-container'>
             <p>
-                <label for='engine'>Use engine:</label>
+                <label for='engine'>Engine:</label>
                 <select name='engine' id='engine'>
                     <option value='2' selected='selected'>Post*</option>
                     <option value='3'>Pre*</option>
                     <option value='1'>Moped</option>
                 </select>
-                <label for='sim-mode'>Simulation Mode:</label>
+                <label for='sim-mode'>Mode:</label>
                 <select name='sim-mode' id='sim-mode'>
                     <option value='DUAL' selected='selected'>DUAL</option>
                     <option value='OVER'>OVER</option>
@@ -94,26 +94,26 @@
                 </select>
             </p>
             <p>
-                <label for='reduction'>Reduction Type:</label>
+                <label for='reduction'>Reduction:</label>
                 <select name='reduction' id='reduction'>
-                    <option value='4' selected='selected'>4: Simple + Backup</option>
-                    <option value='0'>0: None</option>
-                    <option value='1'>1: Simple</option>
-                    <option value='2'>2: Dual-Stack</option>
-                    <option value='3'>3: Dual-Stack + Backup</option>
+                    <option value='0'>0 - none</option>
+                    <option value='1'>1 - low</option>
+                    <option value='2'>2 - medium</option>
+                    <option value='3'>3 - high</option>
+                    <option value='4' selected='selected'>4 - highest</option>
                 </select>
             </p>
             <p>
                 <input type='checkbox' id='view-all' name='view-all' value='false'/>
-                <label for='view-all'>All links</label>
+                <label for='view-all'>Show all links</label>
                 <input type='checkbox' id='top-down' name='top-down' value='false'/>
-                <label for='top-down'>Top Down</label>
+                <label for='top-down'>Top-down view</label>
             </p>
             <p>
                 <input type='checkbox' id='view-interface-names' name='view-interface-names' value='false'/>
-                <label for='view-interface-names'>View Interface Names</label>
+                <label for='view-interface-names'>Show Interfaces</label>
                 <input type='checkbox' id='view-raw-result' name='view-raw-result' value='false'/>
-                <label for='view-raw-result'>Raw Results</label>
+                <label for='view-raw-result'>Raw results</label>
             </p>
             <form enctype="multipart/form-data" method="post">
                 <div id="weight_outer">
