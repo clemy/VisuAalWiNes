@@ -1,5 +1,6 @@
 let selected_model;
 let model_data;
+let result_data = null;
 let view_interface_names = false;
 
 function model_init() {
@@ -14,6 +15,7 @@ function model_init() {
         $("#postCondition").val('.');
         $("#linkFailures").val('0');
         $("#result_query_string").text('');
+        result_data = null;
         $("#queryresult").text('');
         show_finalQuery();
         $("#wait").show(200);
@@ -50,6 +52,7 @@ function model_init() {
         $("#query_entry .subheader").text(query);
         query += ' ' + $("#sim-mode").val();
         $("#result_query_string").text('');
+        result_data = null;
         $("#queryresult").text('');
         $("#wait").show(200);
         $("#cancel-validation").show();
@@ -74,6 +77,9 @@ function model_init() {
 
     $("#view-interface-names").click(function () {
         view_interface_names = $("#view-interface-names").prop('checked');
+        if (result_data !== null) {
+            show_queryResult(result_data);
+        }
     });
 
     $("#view-raw-result").click(function () {
@@ -266,6 +272,7 @@ function adapt_TextArea_Height(el) {
 
 function show_queryResult(data) {
     console.log(data);
+    result_data = data;
     $("#cancel-validation").hide();
     $("#run-validation").show();
     $("#wait").hide(200);
