@@ -18,5 +18,9 @@
     {
         "description": "Can a packet arriving to V0 with the service label $40 that is just on top of the IP address reach the destination router V3 with at least one MPLS label on top of the SMPLS label, all assuming up to a single link failure?",
         "query" : "< [$40] ip > [.#V0 ] .* [V3#.] < mpls+ smpls ip > 1"
+    },
+    {
+        "description": "Is there any MPLS routing in the network with up to a single failed link that takes at least 3 links?",
+        "query" : "<ip> [.#V0] ....* [V3#.] <ip> 1"
     }
 ]
