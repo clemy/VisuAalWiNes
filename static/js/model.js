@@ -1,5 +1,7 @@
 let selected_model;
 let model_data;
+let result_data = null;
+let view_interface_names = false;
 
 function model_init() {
     $("#model_selection form").prop("onclick", null).off("submit");
@@ -12,6 +14,8 @@ function model_init() {
         $("#path").val('.*');
         $("#postCondition").val('.');
         $("#linkFailures").val('0');
+        $("#result_query_string").text('');
+        result_data = null;
         $("#queryresult").text('');
         show_finalQuery();
         $("#wait").show(200);
@@ -44,8 +48,11 @@ function model_init() {
     });
     $("#run-validation").click(function (e) {
         e.preventDefault();
-        var query = $("#final_query").text() + ' DUAL';
+        var query = $("#final_query").text();
         $("#query_entry .subheader").text(query);
+        query += ' ' + $("#sim-mode").val();
+        $("#result_query_string").text('');
+        result_data = null;
         $("#queryresult").text('');
         $("#wait").show(200);
         $("#cancel-validation").show();
@@ -57,7 +64,7 @@ function model_init() {
             $("#engine").val(2);
             options = { ...options, weight };
         }
-        options = { ...options, engine: $("#engine").val() };
+        options = { ...options, engine: $("#engine").val(), reduction: $("#reduction").val() };
         socket.emit('doQuery', selected_model, query, options);
         //$("#query_entry").children(".expand-icon").click();
     });
@@ -66,6 +73,13 @@ function model_init() {
     $("#cancel-validation").click(function (e) {
         e.preventDefault();
         socket.emit('cancelQuery');
+    });
+
+    $("#view-interface-names").click(function () {
+        view_interface_names = $("#view-interface-names").prop('checked');
+        if (result_data !== null) {
+            show_queryResult(result_data);
+        }
     });
 
     $("#view-raw-result").click(function () {
@@ -239,27 +253,44 @@ function show_finalQuery() {
         ' <' + $('#postCondition').val() + '> ' +
         $('#linkFailures').val();
     $('#final_query').text(final_query);
+
+    adapt_TextArea_Height(document.getElementById("preCondition"));
+    adapt_TextArea_Height(document.getElementById("path"));
+    adapt_TextArea_Height(document.getElementById("postCondition"));
+}
+
+function adapt_TextArea_Height(el) {
+    const origHeight = el.style.height;
+    el.style.height = "1px";
+    const newHeight = 2 + el.scrollHeight;
+    if (newHeight <= 2) {
+        el.style.height = origHeight;
+    } else {
+        el.style.height = newHeight + "px";
+    }
 }
 
 function show_queryResult(data) {
     console.log(data);
+    result_data = data;
     $("#cancel-validation").hide();
     $("#run-validation").show();
     $("#wait").hide(200);
     if ($("#query_result").children(".expand-icon").text() == '+') {
         $("#query_result").children(".expand-icon").click();
     }
+    $("#result_query_string").text("Query: " + data.query.replace(/ DUAL$/, ""));
     $("#queryresult").empty();
     // deep copy
     current_data = JSON.parse(JSON.stringify(model_data));
     if (data.error === undefined) {
         var result = '';
         if (data.data.answers.Q1.result === undefined || data.data.answers.Q1.result === null) {
-            result = '<p>Verification was inconclusive.</p>';
+            result = '<p class="inconclusive">Verification was inconclusive.</p>';
         } else if (data.data.answers.Q1.result === false) {
-            result = '<p>Query is not satisfied.</p>';
+            result = '<p class="not-satisfied">is not satisfied.</p>';
         } else {
-            result = '<p>Query is satisfied:</p>';
+            result = '<p class="satisfied">is satisfied with witness trace:</p>';
         }
         if (data.data.answers.Q1.trace !== undefined && data.data.answers.Q1.trace.length > 0) {
             var step = 0; // step 0 is no active edge
@@ -277,8 +308,8 @@ function show_queryResult(data) {
                 }
                 result += '<tr class="result_step" id="result_step_' + step + '" onclick="set_current_step(' + step + ')"><td>&lt;' +
                     entry.stack + '&gt; : [' +
-                    (entry.from_router == 'NULL' ? '&#x1f30d;' : entry.from_router) + '.' + entry.from_interface + '#' +
-                    (entry.to_router == 'NULL' ? '&#x1f30d;' : entry.to_router) + '.' + entry.to_interface +
+                    (entry.from_router == 'NULL' ? '&#x1f30d;' : entry.from_router) + (view_interface_names ? ('.' + entry.from_interface) : '') + '#' +
+                    (entry.to_router == 'NULL' ? '&#x1f30d;' : entry.to_router) + (view_interface_names ? ('.' + entry.to_interface) : '') +
                     ']</td></tr>';
                 if (current_data.routers[entry.to_router] === undefined) {
                     // skip unknown routers (especially the last NULL router)

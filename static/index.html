@@ -54,15 +54,15 @@
                     <table>
                         <tr title="Regular expression over MPLS-labels that defines the label-stack of the packet in the beginning of the route.">
                             <td><label for='preCondition'>Initial header: </label></td>
-                            <td><input type='text' id='preCondition' name='preCondition' value='.'/></td>
+                            <td><textarea type='text' id='preCondition' name='preCondition' value='.' rows='1' wrap='soft'></textarea></td>
                         </tr>
                         <tr title="Regular expression over links in the network that defines the allowed routig sequence.">
                             <td><label for='path'>Route restriction: </label></td>
-                            <td><input type='text' id='path' name='path' value='.*'/></td>
+                            <td><textarea type='text' id='path' name='path' value='.*' rows='1' wrap='soft'></textarea></td>
                         </tr>
                         <tr title="Regular expression over MPLS-lables that defines the label-stack of the packet at the end of the route.">
                             <td><label for='postCondition'>Final header: </label></td>
-                            <td><input type='text' id='postCondition' name='postCondition' value='.'/></td>
+                            <td><textarea type='text' id='postCondition' name='postCondition' value='.' rows='1' wrap='soft'></textarea></td>
                         </tr>
                         <tr title="A maximum number of failed links that are allowed in order to enable the routing sequence.">
                             <td><label for='linkFailures'>Max link failures: </label></td>
@@ -80,20 +80,38 @@
         <div class="header">Trace Options <span class="subheader"></span></div>
         <div class='inner-container'>
             <p>
-                <label for='engine'>Use engine:</label>
+                <label for='engine'>Engine:</label>
                 <select name='engine' id='engine'>
                     <option value='2' selected='selected'>Post*</option>
                     <option value='3'>Pre*</option>
                     <option value='1'>Moped</option>
                 </select>
+                <label for='sim-mode'>Mode:</label>
+                <select name='sim-mode' id='sim-mode'>
+                    <option value='DUAL' selected='selected'>dual</option>
+                    <option value='OVER'>over</option>
+                    <option value='UNDER'>under</option>
+                </select>
+                <label for='reduction'>Reduction:</label>
+                <select name='reduction' id='reduction'>
+                    <option value='0'>none</option>
+                    <option value='1'>low</option>
+                    <option value='2'>medium</option>
+                    <option value='3'>high</option>
+                    <option value='4' selected='selected'>highest</option>
+                </select>
             </p>
             <p>
                 <input type='checkbox' id='view-all' name='view-all' value='false'/>
-                <label for='view-all'>All links</label>
+                <label for='view-all'>Show all links</label>
                 <input type='checkbox' id='top-down' name='top-down' value='false'/>
-                <label for='top-down'>Top Down</label>
+                <label for='top-down'>Top-down view</label>
+            </p>
+            <p>
+                <input type='checkbox' id='view-interface-names' name='view-interface-names' value='false'/>
+                <label for='view-interface-names'>Show Interfaces</label>
                 <input type='checkbox' id='view-raw-result' name='view-raw-result' value='false'/>
-                <label for='view-raw-result'>Raw Results</label>
+                <label for='view-raw-result'>Raw results</label>
             </p>
             <form enctype="multipart/form-data" method="post">
                 <div id="weight_outer">
@@ -130,6 +148,7 @@
         <a class="expand-icon" href="#" title="Click to open or close">+</a>
         <div class="header">Result</div>
         <div class="inner-container">
+            <p id='result_query_string'></p>
             <div id="queryresult"></div>
         </div>
     </div>

@@ -51,7 +51,7 @@ function map_init() {
         getSourceColor: [0, 46, 79],
         getTargetColor: [230, 230, 230],
         getWidth: 8,
-        getTilt: 20
+        getTilt: 5
     });
 
     layerUsedEdges = new deck.ArcLayer({
@@ -67,7 +67,7 @@ function map_init() {
         getSourceColor: d => d.step <= current_step ? [128, 32, 32]: [0, 46, 79],
         getTargetColor: d => d.step <= current_step ? [255, 32, 32] : [230, 230, 230],
         getWidth: 8,
-        getTilt: 20,
+        getTilt: 5,
         updateTriggers: {
             getSourceColor: [current_step],
             getTargetColor: [current_step]
