@@ -17,6 +17,7 @@ function model_init() {
         $("#result_query_string").text('');
         result_data = null;
         $("#queryresult").text('');
+        $("#query_result .subheader").text('');
         show_finalQuery();
         $("#wait").show(200);
         socket.emit('getModelData', selected_model);
@@ -54,6 +55,7 @@ function model_init() {
         $("#result_query_string").text('');
         result_data = null;
         $("#queryresult").text('');
+        $("#query_result .subheader").text('');
         $("#wait").show(200);
         $("#cancel-validation").show();
         $("#run-validation").hide();
@@ -286,11 +288,11 @@ function show_queryResult(data) {
     if (data.error === undefined) {
         var result = '';
         if (data.data.answers.Q1.result === undefined || data.data.answers.Q1.result === null) {
-            result = '<p class="inconclusive">Verification was inconclusive.</p>';
+            $("#query_result .subheader").html('<span class="inconclusive">Inconclusive</span>');
         } else if (data.data.answers.Q1.result === false) {
-            result = '<p class="not-satisfied">is not satisfied.</p>';
+            $("#query_result .subheader").html('<span class="not-satisfied">Not Satisfied</span>');
         } else {
-            result = '<p class="satisfied">is satisfied with witness trace:</p>';
+            $("#query_result .subheader").html('<span class="satisfied">Satisfied</span>');
         }
         if (data.data.answers.Q1.trace !== undefined && data.data.answers.Q1.trace.length > 0) {
             var step = 0; // step 0 is no active edge

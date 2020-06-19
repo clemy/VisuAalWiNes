@@ -201,12 +201,31 @@ input[type=text] {
     position: absolute;
 }
 
+#weight_entry .inner-container {
+    font-size: smaller;
+}
+
+#weight_entry #weight_outer {
+    font-size: initial;
+}
+
+#weight_entry table {
+    width: 100%;
+}
+
 #query_result .inner-container {
     font-size: smaller;
 }
 
 #query_result tr:hover:not(.selected) {
     background-color: #005c9b;
+}
+
+#query_result .subheader {
+    margin-left: 10px;
+    font-size: inherit;
+    font-weight: inherit;
+
 }
 
 #query_result .satisfied {
