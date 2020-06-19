@@ -8,8 +8,7 @@ function model_init() {
     $("#model_selection form").submit(function (e) {
         e.preventDefault();
         selected_model = $("#model").val();
-        $("#model_selection .subheader").text(selected_model);
-        $("#query_entry .subheader").text('');
+        $("#model_selection .subheader").text(selected_model);        
         $("#preCondition").val('.');
         $("#path").val('.*');
         $("#postCondition").val('.');
@@ -50,7 +49,6 @@ function model_init() {
     $("#run-validation").click(function (e) {
         e.preventDefault();
         var query = $("#final_query").text();
-        $("#query_entry .subheader").text(query);
         query += ' ' + $("#sim-mode").val();
         $("#result_query_string").text('');
         result_data = null;
@@ -279,6 +277,7 @@ function show_finalQuery() {
         ' <' + $('#postCondition').val() + '> ' +
         $('#linkFailures').val();
     $('#final_query').text(final_query);
+    $("#query_entry .subheader").text(final_query);
 
     adapt_TextArea_Height(document.getElementById("preCondition"));
     adapt_TextArea_Height(document.getElementById("path"));
