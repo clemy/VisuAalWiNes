@@ -95,6 +95,7 @@ function model_init() {
     });
 
     $("#add-interface-to-path").prop('disabled', true);
+    $("#copy-interface-to-clipboard").prop('disabled', true);
 }
 
 function load_model(data) {
@@ -169,6 +170,7 @@ function show_routerList(data) {
         $("<li class='router_list_router' id='router_list_router_" + routerName + "' onclick='set_router_list_router(\"" + routerName + "\")'>" + routerName + "</li>")));
     $("#router_list_interfaces").empty();
     $("#add-interface-to-path").prop('disabled', true);
+    $("#copy-interface-to-clipboard").prop('disabled', true);
     set_router_list_anyrouter();
 }
 
@@ -176,11 +178,11 @@ function set_router_list_anyrouter() {
     $('.router_list_router').removeClass('selected');
     $('#router_list_router_ANYROUTER').addClass('selected');
     $("#router_list_interfaces").empty();
-    $("#add-interface-to-path").prop('disabled', false).val('Append selected router to route restriction').off('click').click(e => {
-        $("#path").val($("#path").val() + '.');
-        $("#path").focus();
-        $("#path")[0].scrollLeft = $("#path")[0].scrollWidth;
-        show_finalQuery();
+    $("#add-interface-to-path").prop('disabled', false).val('Insert selected router in route restriction').off('click').click(e => {
+        insert_in_textarea($("#path"), '.');
+    });
+    $("#copy-interface-to-clipboard").prop('disabled', false).val('Copy selected router to clipboard').off('click').click(e => {
+        copy_to_clipboard('.');
     });
 }
 
@@ -197,24 +199,46 @@ function set_router_list_router(routerName) {
     $("#router_list_interfaces").empty();
     $("#router_list_interfaces").append(model_data.routers[routerName].interfaces.sort().map((ifName) =>
         $("<li class='router_list_interface' id='router_list_interface_" + ifName + "' onclick='set_router_list_interface(\"" + routerName + "\", \"" + ifName + "\")'>" + ifName + "</li>")));
-    $("#add-interface-to-path").prop('disabled', false).val('Append selected router to route restriction').off('click').click(e => {
-        $("#path").val($("#path").val() + quote_if_necessary(routerName));
-        $("#path").focus();
-        $("#path")[0].scrollLeft = $("#path")[0].scrollWidth;
-        show_finalQuery();
+    $("#add-interface-to-path").prop('disabled', false).val('Insert selected router in route restriction').off('click').click(e => {
+        insert_in_textarea($("#path"), quote_if_necessary(routerName));
+    });
+    $("#copy-interface-to-clipboard").prop('disabled', false).val('Copy selected router to clipboard').off('click').click(e => {
+        copy_to_clipboard(quote_if_necessary(routerName));
     });
 }
 
 function set_router_list_interface(routerName, ifName) {
     $('.router_list_interface').removeClass('selected');
     $('#router_list_interface_' + ifName.replace(/(:|\.|\[|\]|,|=|@|\/)/g, "\\$1")).addClass('selected');
-    $("#add-interface-to-path").prop('disabled', false).val('Append selected interface to route restriction').off('click').click(e => {
+    $("#add-interface-to-path").prop('disabled', false).val('Insert selected interface in route restriction').off('click').click(e => {
         var finalName = quote_if_necessary(routerName) + "." + quote_if_necessary(ifName);
-        $("#path").val($("#path").val() + finalName);
-        $("#path").focus();
-        $("#path")[0].scrollLeft = $("#path")[0].scrollWidth;
-        show_finalQuery();
+        insert_in_textarea($("#path"), finalName);
     });
+    $("#copy-interface-to-clipboard").prop('disabled', false).val('Copy selected interface to clipboard').off('click').click(e => {
+        var finalName = quote_if_necessary(routerName) + "." + quote_if_necessary(ifName);
+        copy_to_clipboard(finalName);
+    });
+}
+
+function insert_in_textarea(textarea, text) {
+    const cursorPos = textarea[0].selectionStart;
+    const oldContent = textarea.val().substring(0, cursorPos) + textarea.val().substring(textarea[0].selectionEnd);
+    textarea.val(oldContent.substring(0, cursorPos) + text + oldContent.substring(cursorPos));
+    textarea[0].selectionStart = textarea[0].selectionEnd = cursorPos + text.length;
+    textarea.focus();
+    show_finalQuery();
+}
+
+function copy_to_clipboard(text) {
+    const currentFocus = document.activeElement;
+    const clibpoard_buffer = $("<input>");
+    $("body").append(clibpoard_buffer);
+    clibpoard_buffer.val(text).select();
+    document.execCommand("copy");
+    clibpoard_buffer.remove();
+    if (currentFocus && typeof currentFocus.focus === "function") {
+        currentFocus.focus();
+    }
 }
 
 function add_models(models) {
