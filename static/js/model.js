@@ -8,8 +8,7 @@ function model_init() {
     $("#model_selection form").submit(function (e) {
         e.preventDefault();
         selected_model = $("#model").val();
-        $("#model_selection .subheader").text(selected_model);
-        $("#query_entry .subheader").text('');
+        $("#model_selection .subheader").text(selected_model);        
         $("#preCondition").val('.');
         $("#path").val('.*');
         $("#postCondition").val('.');
@@ -17,6 +16,7 @@ function model_init() {
         $("#result_query_string").text('');
         result_data = null;
         $("#queryresult").text('');
+        $("#query_result .subheader").text('');
         show_finalQuery();
         $("#wait").show(200);
         socket.emit('getModelData', selected_model);
@@ -49,11 +49,11 @@ function model_init() {
     $("#run-validation").click(function (e) {
         e.preventDefault();
         var query = $("#final_query").text();
-        $("#query_entry .subheader").text(query);
         query += ' ' + $("#sim-mode").val();
         $("#result_query_string").text('');
         result_data = null;
         $("#queryresult").text('');
+        $("#query_result .subheader").text('');
         $("#wait").show(200);
         $("#cancel-validation").show();
         $("#run-validation").hide();
@@ -93,6 +93,7 @@ function model_init() {
     });
 
     $("#add-interface-to-path").prop('disabled', true);
+    $("#copy-interface-to-clipboard").prop('disabled', true);
 }
 
 function load_model(data) {
@@ -167,6 +168,7 @@ function show_routerList(data) {
         $("<li class='router_list_router' id='router_list_router_" + routerName + "' onclick='set_router_list_router(\"" + routerName + "\")'>" + routerName + "</li>")));
     $("#router_list_interfaces").empty();
     $("#add-interface-to-path").prop('disabled', true);
+    $("#copy-interface-to-clipboard").prop('disabled', true);
     set_router_list_anyrouter();
 }
 
@@ -174,11 +176,11 @@ function set_router_list_anyrouter() {
     $('.router_list_router').removeClass('selected');
     $('#router_list_router_ANYROUTER').addClass('selected');
     $("#router_list_interfaces").empty();
-    $("#add-interface-to-path").prop('disabled', false).val('Append selected router to route restriction').off('click').click(e => {
-        $("#path").val($("#path").val() + '.');
-        $("#path").focus();
-        $("#path")[0].scrollLeft = $("#path")[0].scrollWidth;
-        show_finalQuery();
+    $("#add-interface-to-path").prop('disabled', false).val('Insert selected router in route restriction').off('click').click(e => {
+        insert_in_textarea($("#path"), '.');
+    });
+    $("#copy-interface-to-clipboard").prop('disabled', false).val('Copy selected router to clipboard').off('click').click(e => {
+        copy_to_clipboard('.');
     });
 }
 
@@ -195,24 +197,46 @@ function set_router_list_router(routerName) {
     $("#router_list_interfaces").empty();
     $("#router_list_interfaces").append(model_data.routers[routerName].interfaces.sort().map((ifName) =>
         $("<li class='router_list_interface' id='router_list_interface_" + ifName + "' onclick='set_router_list_interface(\"" + routerName + "\", \"" + ifName + "\")'>" + ifName + "</li>")));
-    $("#add-interface-to-path").prop('disabled', false).val('Append selected router to route restriction').off('click').click(e => {
-        $("#path").val($("#path").val() + quote_if_necessary(routerName));
-        $("#path").focus();
-        $("#path")[0].scrollLeft = $("#path")[0].scrollWidth;
-        show_finalQuery();
+    $("#add-interface-to-path").prop('disabled', false).val('Insert selected router in route restriction').off('click').click(e => {
+        insert_in_textarea($("#path"), quote_if_necessary(routerName));
+    });
+    $("#copy-interface-to-clipboard").prop('disabled', false).val('Copy selected router to clipboard').off('click').click(e => {
+        copy_to_clipboard(quote_if_necessary(routerName));
     });
 }
 
 function set_router_list_interface(routerName, ifName) {
     $('.router_list_interface').removeClass('selected');
     $('#router_list_interface_' + ifName.replace(/(:|\.|\[|\]|,|=|@|\/)/g, "\\$1")).addClass('selected');
-    $("#add-interface-to-path").prop('disabled', false).val('Append selected interface to route restriction').off('click').click(e => {
+    $("#add-interface-to-path").prop('disabled', false).val('Insert selected interface in route restriction').off('click').click(e => {
         var finalName = quote_if_necessary(routerName) + "." + quote_if_necessary(ifName);
-        $("#path").val($("#path").val() + finalName);
-        $("#path").focus();
-        $("#path")[0].scrollLeft = $("#path")[0].scrollWidth;
-        show_finalQuery();
+        insert_in_textarea($("#path"), finalName);
     });
+    $("#copy-interface-to-clipboard").prop('disabled', false).val('Copy selected interface to clipboard').off('click').click(e => {
+        var finalName = quote_if_necessary(routerName) + "." + quote_if_necessary(ifName);
+        copy_to_clipboard(finalName);
+    });
+}
+
+function insert_in_textarea(textarea, text) {
+    const cursorPos = textarea[0].selectionStart;
+    const oldContent = textarea.val().substring(0, cursorPos) + textarea.val().substring(textarea[0].selectionEnd);
+    textarea.val(oldContent.substring(0, cursorPos) + text + oldContent.substring(cursorPos));
+    textarea[0].selectionStart = textarea[0].selectionEnd = cursorPos + text.length;
+    textarea.focus();
+    show_finalQuery();
+}
+
+function copy_to_clipboard(text) {
+    const currentFocus = document.activeElement;
+    const clibpoard_buffer = $("<input>");
+    $("body").append(clibpoard_buffer);
+    clibpoard_buffer.val(text).select();
+    document.execCommand("copy");
+    clibpoard_buffer.remove();
+    if (currentFocus && typeof currentFocus.focus === "function") {
+        currentFocus.focus();
+    }
 }
 
 function add_models(models) {
@@ -253,6 +277,7 @@ function show_finalQuery() {
         ' <' + $('#postCondition').val() + '> ' +
         $('#linkFailures').val();
     $('#final_query').text(final_query);
+    $("#query_entry .subheader").text(final_query);
 
     adapt_TextArea_Height(document.getElementById("preCondition"));
     adapt_TextArea_Height(document.getElementById("path"));
@@ -286,11 +311,11 @@ function show_queryResult(data) {
     if (data.error === undefined) {
         var result = '';
         if (data.data.answers.Q1.result === undefined || data.data.answers.Q1.result === null) {
-            result = '<p class="inconclusive">Verification was inconclusive.</p>';
+            $("#query_result .subheader").html('<span class="inconclusive">Inconclusive</span>');
         } else if (data.data.answers.Q1.result === false) {
-            result = '<p class="not-satisfied">is not satisfied.</p>';
+            $("#query_result .subheader").html('<span class="not-satisfied">Not Satisfied</span>');
         } else {
-            result = '<p class="satisfied">is satisfied with witness trace:</p>';
+            $("#query_result .subheader").html('<span class="satisfied">Satisfied</span>');
         }
         if (data.data.answers.Q1.trace !== undefined && data.data.answers.Q1.trace.length > 0) {
             var step = 0; // step 0 is no active edge
