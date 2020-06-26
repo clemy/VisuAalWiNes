@@ -175,20 +175,26 @@
 
 <div class="control-sidebar middle">
     <div id="router_list" class="control-container">
-        <div class="header_noclick">Routers & Interfaces</div>
+        <div class="header_noclick">Selection</div>
         <div class='inner-container_always_expanded'>
             <div id="router_outer">
                 <div id="router_left">
                     Select a router:
                     <ul id="router_list_routers"></ul>
                 </div>
-                <div id="router_right">
-                    and possibly specify also an interface:
+                <div id="router_middle">
+                    and an interface:
                     <ul id="router_list_interfaces"></ul>
+                </div>
+                <div id="router_right">
+                    <span title="Select a label that is tested in the chosen router and chosen interface in the routing table.">Select a label:</span>
+                    <ul id="router_list_labels"></ul>
                 </div>
             </div>
             <input id='add-interface-to-path' type='button' value='Insert selected router in route restriction'/>
             <input id='copy-interface-to-clipboard' type='button' value='Copy selected router to clipboard'/>
+            <input id='add-label-to-header' type='button' value='Insert selected label in header'/>
+            <input id='copy-label-to-clipboard' type='button' value='Copy selected label to clipboard'/>
         </div>
     </div>
 
