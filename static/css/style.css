@@ -340,11 +340,17 @@ input[type=text] {
 
 #router_left {
     float: left;
+    width: 250px;
+}
+
+#router_middle {
+    float: left;
+    margin-left: 50px;
     width: 300px;
 }
 
 #router_right {
-    margin-left: 380px;
+    margin-left: 650px;
 }
 
 #rawresult {

@@ -6,7 +6,7 @@
           <te-groups>
             <te-group>
               <routes>
-                <route to="in2">
+                <route to="in2" weight="109213">
                   <actions>
                     <action arg="s41" type="swap"/>
                   </actions>
@@ -19,12 +19,12 @@
           <te-groups>
             <te-group>
               <routes>
-                <route to="in1">
+                <route to="in1" weight="94664">
                   <actions>
                     <action arg="s10" type="push"/>
                   </actions>
                 </route>                
-                <route to="in2">
+                <route to="in2" weight="109213">
                   <actions>
                     <action arg="s20" type="push"/>
                   </actions>
@@ -41,7 +41,7 @@
           <te-groups>
             <te-group>
               <routes>
-                <route to="in3">
+                <route to="in3" weight="188492">
                   <actions>
                     <action arg="s11" type="swap"/>
                   </actions>
@@ -58,7 +58,7 @@
           <te-groups>
             <te-group>
               <routes>
-                <route to="in3">
+                <route to="in3" weight="94664">
                   <actions>
                     <action arg="s21" type="swap"/>
                   </actions>
@@ -67,7 +67,7 @@
             </te-group>
             <te-group>
               <routes>
-                <route to="in4">
+                <route to="in4" weight="70999">
                   <actions>
                     <action arg="s21" type="swap"/>
                     <action arg="30" type="push"/>
@@ -81,7 +81,7 @@
           <te-groups>
             <te-group>
               <routes>
-                <route to="in4">
+                <route to="in4" weight="70999">
                   <actions>
                     <action arg="s42" type="swap"/>
                   </actions>
@@ -98,7 +98,7 @@
           <te-groups>
             <te-group>
               <routes>
-                <route to="eg0">
+                <route to="eg0" weight="0">
                   <actions>
                     <action type="pop"/>
                   </actions>
@@ -111,7 +111,7 @@
           <te-groups>
             <te-group>
               <routes>
-                <route to="eg0">
+                <route to="eg0" weight="0">
                   <actions>
                     <action type="pop"/>
                   </actions>
@@ -124,7 +124,7 @@
           <te-groups>
             <te-group>
               <routes>
-                <route to="eg0">
+                <route to="eg0" weight="0">
                   <actions>
                     <action arg="s44" type="swap"/>
                   </actions>
@@ -137,7 +137,7 @@
           <te-groups>
             <te-group>
               <routes>
-                <route to="eg0">
+                <route to="eg0" weight="0">
                   <actions>
                     <action type="pop"/>
                   </actions>
@@ -154,7 +154,7 @@
           <te-groups>
             <te-group>
               <routes>
-                <route to="in3">
+                <route to="in3" weight="110311">
                   <actions>
                     <action type="pop"/>
                   </actions>
@@ -167,7 +167,7 @@
           <te-groups>
             <te-group>
               <routes>
-                <route to="in3">
+                <route to="in3" weight="110311">
                   <actions>
                     <action arg="s43" type="swap"/>
                   </actions>
