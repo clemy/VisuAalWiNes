@@ -53,7 +53,7 @@ class Models {
         try {
             ({ stdout, stderr } = await execFile(path.join(this._binPath, 'aalwines'),
                 ['--topology', topologyFile, '--routing', routingFile, '--net'],
-                { env: { MOPED_PATH: mopedPath }}
+                { env: { MOPED_PATH: mopedPath }, maxBuffer: 100 * 1024 * 1024 }
             ));
         } catch (err) {
             console.error('loadModel error', name, err);
@@ -118,7 +118,7 @@ class Models {
                 try {
                     const childPromise = execFile(path.join(this._binPath, 'aalwines'),
                         parameters,
-                        { env: { MOPED_PATH: mopedPath }}
+                        { env: { MOPED_PATH: mopedPath }, maxBuffer: 100 * 1024 * 1024 }
                     );
                     child = childPromise.child;
                     socket.runningQueryProcess = child;
