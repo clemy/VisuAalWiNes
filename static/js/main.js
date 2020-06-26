@@ -14,13 +14,13 @@ $(document).ready(function () {
     // model_selection is initial UI control
     $("#model_selection").children(".expand-icon").click();
 
-    $("#about").children(".expand-icon").click();
+    //$("#about").children(".expand-icon").click();
 });
 
 function set_sidebar_right_visibility() {
     if ($("#router_list,#raw_result").is(":visible")) {
-        $("#sidebar_right").hide(200);
+        //$("#sidebar_right").hide(200);
     } else {
-        $("#sidebar_right").show(200);
+        //$("#sidebar_right").show(200);
     }
 }

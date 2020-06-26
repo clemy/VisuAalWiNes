@@ -43,7 +43,7 @@ app.use(function(req, res) {
     res.status(400).sendFile(path.join(__dirname,'static', '404.html'));
 });
 
-http.listen(3000, function() {
+http.listen(3500, function() {
     console.log();
     console.log('Start your browser and go to http://localhost:3000/');
 });

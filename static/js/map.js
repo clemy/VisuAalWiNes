@@ -18,7 +18,7 @@ let top_down = false;
 let usedEdgesCount = 0;
 
 function map_init() {
-    const apiKey = 'pk.eyJ1IjoiY2xlbXkiLCJhIjoiY2s1aHh1eXVwMDVoMTNvbW43ODc5a2YzbyJ9.VqOH4UuphpLFCEBw8Px-VQ';
+    const apiKey = 'pk.eyJ1IjoiY2xlbXkiLCJhIjoiY2tiZjN4ZHh1MDgwYzJybXpjMnZ4NGkxeSJ9.XoAO6ppxJzzjxmBw3Ku4GQ';
 
     layerRouter = new deck.ScatterplotLayer({
         id: 'routers',
