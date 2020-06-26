@@ -246,9 +246,11 @@ function show_label_list(labels) {
         $("<li class='router_list_label' id='router_list_label_mpls' onclick='set_router_list_label(\"mpls\")'>mpls</li>"));
     $("#router_list_labels").append(
         $("<li class='router_list_label' id='router_list_label_smpls' onclick='set_router_list_label(\"smpls\")'>smpls</li>"));
-    $("#router_list_labels").append(labels.sort().map((labelName) =>
+    $("#router_list_labels").append(
+        labels.filter((labelName) => !["ip", "mpls", "smpls"].includes(labelName))
+        .sort().map((labelName) =>
         $("<li class='router_list_label' id='router_list_label_" + labelName + "' onclick='set_router_list_label(\"" + labelName + "\")'>" + labelName + "</li>")));
-        set_router_list_label("ip");
+    set_router_list_label("ip");
 }
 
 function set_router_list_label(labelName) {
