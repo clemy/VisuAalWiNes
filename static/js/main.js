@@ -9,6 +9,7 @@ $(document).ready(function () {
         // siblings does not work here, as it could be $(this)
         $(this).parent().children(".expand-icon").text(
             $(this).parent().children(".expand-icon").text() == '+' ? '-' : '+');
+        $(this).parent().parent().siblings("#video").toggle();
     });
     
     // model_selection is initial UI control

@@ -128,6 +128,21 @@ body {
     margin: 0px 5px 0px 5px;
 }
 
+#video_placeholder {
+    box-sizing: border-box;
+    min-height: 235px;
+    padding: 20px 0px 0px 63px;
+    font-size: large;
+}
+
+#video {
+    border: 1px solid #005c9b;
+    position: absolute;
+    top: 265px;
+    right: 25px;
+    display: none;
+}
+
 .query-example {
     margin: 2px 0px 0px 5px;
     font-size: smaller;
