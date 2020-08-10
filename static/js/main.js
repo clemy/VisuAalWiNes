@@ -9,6 +9,7 @@ $(document).ready(function () {
         // siblings does not work here, as it could be $(this)
         $(this).parent().children(".expand-icon").text(
             $(this).parent().children(".expand-icon").text() == '+' ? '-' : '+');
+        $(this).parent().parent().siblings("#video").toggle();
     });
     
     // model_selection is initial UI control
@@ -19,8 +20,8 @@ $(document).ready(function () {
 
 function set_sidebar_right_visibility() {
     if ($("#router_list,#raw_result").is(":visible")) {
-        $("#sidebar_right").hide(200);
+        $("#sidebar_right_with_video").hide(200);
     } else {
-        $("#sidebar_right").show(200);
+        $("#sidebar_right_with_video").show(200);
     }
 }
