@@ -42,7 +42,7 @@ function map_init() {
         }
     });
 
-    layerEdges = new deck.ArcLayer({
+    layerEdges = new ArrowArcLayer({
         id: 'edges',
         data: [],
         // Styles
@@ -54,7 +54,7 @@ function map_init() {
         getTilt: 5
     });
 
-    layerUsedEdges = new deck.ArcLayer({
+    layerUsedEdges = new ArrowArcLayer({
         id: 'usedEdges',
         pickable: true,
         autoHighlight: true,
