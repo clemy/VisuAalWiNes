@@ -134,3 +134,24 @@ function getWeightList() {
         ).get()]
     ).get();
 }
+
+function restoreWeightList(weightList) {
+    $('#weight_list').empty();
+    if (weightList == null) {
+        const weightGroup = $('#weight_group_template .weight_group').clone(true);
+        weightGroup.appendTo('#weight_list');
+        initializeWeightGroup(weightGroup[0]);
+    } else {
+        weightList.forEach(group => {
+            const weightGroup = $('#weight_group_template .weight_group').clone(true);
+            weightGroup.appendTo('#weight_list');
+            initializeWeightGroup(weightGroup[0]);
+            group.forEach(element => {
+                const weightElement = $('#weight_templates>:contains(' + element.atom + ')').clone();
+                weightElement.children('input').val(element.factor);
+                weightElement.appendTo(weightGroup);
+            });
+        });
+    }
+    weightListChanged();
+}

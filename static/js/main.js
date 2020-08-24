@@ -19,7 +19,7 @@ $(document).ready(function () {
 });
 
 function set_sidebar_right_visibility() {
-    if ($("#router_list,#raw_result").is(":visible")) {
+    if ($("#load_save,#router_list,#raw_result").is(":visible")) {
         $("#sidebar_right_with_video").hide(200);
     } else {
         $("#sidebar_right_with_video").show(200);

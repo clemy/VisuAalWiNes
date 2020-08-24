@@ -173,6 +173,10 @@ body {
     display: none;
 }
 
+#load_save {
+    display: none;
+}
+
 #raw_result {
     display: none;
 }
@@ -255,7 +259,7 @@ input[type=text] {
     color: yellow;
 }
 
-#router_list_routers li:hover:not(.selected), #router_list_interfaces li:hover:not(.selected) {
+#saved_queries li:hover:not(.selected), #router_list_routers li:hover:not(.selected), #router_list_interfaces li:hover:not(.selected) {
     background-color: #005c9b;
 }
 
@@ -348,9 +352,13 @@ input[type=text] {
     min-height: 100px;
 }
 
-#router_outer {
+.saved_block, #router_outer {
     overflow: hidden;
     margin-top: 10px;
+}
+
+#load_save input[type=text] {
+    width: 300px;
 }
 
 #router_left {

@@ -73,6 +73,7 @@
                 </p>
                 <p id='final_query'></p>
             </form>
+            <input id='open-load-save' type='button' value='Load / Save'/>
         </div>
     </div>
 
@@ -175,6 +176,28 @@
 </div>
 
 <div class="control-sidebar middle">
+    <div id="load_save" class="control-container">
+        <div class="header_noclick">Load / Save Queries and Options</div>
+        <div class='inner-container_always_expanded'>
+            <div class="saved_block">
+                Saved queries:
+                <ul id="saved_queries"></ul>
+            </div>
+            <div class="saved_block">
+            <input id='load-query' type='button' value='Load selected query'/>
+            <input id='delete-query' type='button' value='Delete selected query'/>
+            <input id='overwrite-query' type='button' value='Overwrite selected query'/>
+            </div>
+            <div class="saved_block">
+                <input id='save-query' type='button' value='Save with name:'/>
+                <input type='text' id='saveName' placeholder='newName'/>
+            </div>
+            <div class="saved_block">
+                <input id='close-load-save' type='button' value='Close'/>
+            </div>
+            </div>
+    </div>
+
     <div id="router_list" class="control-container">
         <div class="header_noclick">Selection</div>
         <div class='inner-container_always_expanded'>

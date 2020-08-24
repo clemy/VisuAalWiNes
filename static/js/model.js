@@ -111,6 +111,14 @@ function model_init() {
     $("#copy-interface-to-clipboard").prop('disabled', true);
     $("#add-label-to-header").prop('disabled', true);
     $("#copy-label-to-clipboard").prop('disabled', true)
+
+    $("#open-load-save").prop('disabled', true).click(function () {
+        $("#load_save").toggle(200, set_sidebar_right_visibility);
+        set_sidebar_right_visibility();
+    });
+    $("#close-load-save").click(function () {
+        $("#load_save").hide(200, set_sidebar_right_visibility);
+    });
 }
 
 function load_model(data) {
@@ -118,9 +126,11 @@ function load_model(data) {
         return;
     }
     $("#run-validation").prop('disabled', false);
+    $("#open-load-save").prop('disabled', false);
     model_fillGps(data.data);
     model_data = data.data;
     show_queryExamples(model_data.queries);
+    show_savedQueries(selected_model);
     show_routerList(model_data);
     show_simulation(model_data, true);
     $("#wait").hide(200);
@@ -175,6 +185,92 @@ function model_fillGps(data) {
             data.maxLng = Math.max(data.routers[routerName].lng, data.maxLng);
         }
     );
+}
+
+function show_savedQueries(modelName) {
+    $("#saved_queries").empty();
+    $("#saved_queries").append(get_saved_queries(modelName).sort().map((queryName) =>
+        $("<li class='saved_queries_query' id='saved_queries_query_" + queryName + "' onclick='set_saved_queries_query(\"" + modelName + "\", \"" + queryName + "\")'>" + queryName + "</li>")));
+    $("#load-query,#delete-query,#overwrite-query").prop('disabled', true);
+    $("#save-query").prop('disabled', false).off('click').click(e => {
+        const queryName = $('#saveName').val();
+        if (queryName) {
+            save_query(modelName, queryName);
+            set_saved_queries_query(modelName, queryName);
+        }
+    });
+}
+
+function set_saved_queries_query(modelName, queryName) {
+    $('.saved_queries_query').removeClass('selected');
+    $('#saved_queries_query_' + queryName.replace(/(:|\.|\[|\]|,|=|@|\/)/g, "\\$1")).addClass('selected');
+    $("#load-query").prop('disabled', false).off('click').click(e => {
+        load_query(modelName, queryName);
+    });
+    $("#delete-query").prop('disabled', false).off('click').click(e => {
+        delete_query(modelName, queryName);
+    });
+    $("#overwrite-query").prop('disabled', false).off('click').click(e => {
+        save_query(modelName, queryName);
+        set_saved_queries_query(modelName, queryName);
+    });
+}
+
+function get_saved_queries(modelName) {
+    const savedQueries = JSON.parse(localStorage.getItem("savedQueries") ?? "{}");
+    const savedQueriesForModel = savedQueries[modelName] ?? (savedQueries[modelName] = {});
+    return Object.keys(savedQueriesForModel);
+}
+
+function save_query(modelName, queryName) {
+    let savedQueries = JSON.parse(localStorage.getItem("savedQueries") ?? "{}");
+    let savedQueriesForModel = savedQueries[modelName] ?? (savedQueries[modelName] = {});
+
+    const data = {
+        preCondition: $("#preCondition").val(),
+        path: $("#path").val(),
+        postCondition: $("#postCondition").val(),
+        linkFailures: $("#linkFailures").val(),
+
+        engine: $("#engine").val(),
+        sim_mode: $("#sim-mode").val(),
+        reduction: $("#reduction").val(),
+
+        weights: getWeightList()
+    };
+    savedQueriesForModel[queryName] = data;
+
+    localStorage.setItem("savedQueries", JSON.stringify(savedQueries));
+
+    show_savedQueries(modelName);
+}
+
+function load_query(modelName, queryName) {
+    const savedQueries = JSON.parse(localStorage.getItem("savedQueries") ?? "{}");
+    const savedQueriesForModel = savedQueries[modelName] ?? (savedQueries[modelName] = {});
+    const savedQuery = savedQueriesForModel[queryName];
+    if (savedQuery) {
+        $("#preCondition").val(savedQuery.preCondition);
+        $("#path").val(savedQuery.path);
+        $("#postCondition").val(savedQuery.postCondition);
+        $("#linkFailures").val(savedQuery.linkFailures);
+
+        $("#engine").val(savedQuery.engine);
+        $("#sim-mode").val(savedQuery.sim_mode);
+        $("#reduction").val(savedQuery.reduction);
+
+        restoreWeightList(savedQuery.weights);
+
+        show_finalQuery();
+    }
+}
+
+function delete_query(modelName, queryName) {
+    let savedQueries = JSON.parse(localStorage.getItem("savedQueries") ?? "{}");
+    let savedQueriesForModel = savedQueries[modelName] ?? (savedQueries[modelName] = {});
+    delete savedQueriesForModel[queryName];
+    localStorage.setItem("savedQueries", JSON.stringify(savedQueries));
+    show_savedQueries(modelName);
 }
 
 function show_routerList(data) {
