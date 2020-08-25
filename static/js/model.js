@@ -190,7 +190,10 @@ function model_fillGps(data) {
 function show_savedQueries(modelName) {
     $("#saved_queries").empty();
     $("#saved_queries").append(get_saved_queries(modelName).sort().map((queryName) =>
-        $("<li class='saved_queries_query' id='saved_queries_query_" + queryName + "' onclick='set_saved_queries_query(\"" + modelName + "\", \"" + queryName + "\")'>" + queryName + "</li>")));
+        $("<li class='saved_queries_query'>" + queryName + "</li>").prop("id", "saved_queries_query_" + queryName).click(e => 
+            set_saved_queries_query(modelName, queryName)
+        )
+    ));
     $("#load-query,#delete-query,#overwrite-query").prop('disabled', true);
     $("#save-query").prop('disabled', false).off('click').click(e => {
         const queryName = $('#saveName').val();
@@ -203,7 +206,7 @@ function show_savedQueries(modelName) {
 
 function set_saved_queries_query(modelName, queryName) {
     $('.saved_queries_query').removeClass('selected');
-    $('#saved_queries_query_' + queryName.replace(/(:|\.|\[|\]|,|=|@|\/)/g, "\\$1")).addClass('selected');
+    document.getElementById('saved_queries_query_' + queryName).classList.add('selected');
     $("#load-query").prop('disabled', false).off('click').click(e => {
         load_query(modelName, queryName);
     });
