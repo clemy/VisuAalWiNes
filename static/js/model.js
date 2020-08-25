@@ -217,6 +217,13 @@ function set_saved_queries_query(modelName, queryName) {
         save_query(modelName, queryName);
         set_saved_queries_query(modelName, queryName);
     });
+    $("#rename-query").prop('disabled', false).off('click').click(e => {
+        const newQueryName = $('#renameName').val();
+        if (newQueryName) {
+            rename_query(modelName, queryName, newQueryName);
+            set_saved_queries_query(modelName, newQueryName);
+        }
+    });
 }
 
 function get_saved_queries(modelName) {
@@ -271,6 +278,15 @@ function load_query(modelName, queryName) {
 function delete_query(modelName, queryName) {
     let savedQueries = JSON.parse(localStorage.getItem("savedQueries") ?? "{}");
     let savedQueriesForModel = savedQueries[modelName] ?? (savedQueries[modelName] = {});
+    delete savedQueriesForModel[queryName];
+    localStorage.setItem("savedQueries", JSON.stringify(savedQueries));
+    show_savedQueries(modelName);
+}
+
+function rename_query(modelName, queryName, newQueryName) {
+    let savedQueries = JSON.parse(localStorage.getItem("savedQueries") ?? "{}");
+    let savedQueriesForModel = savedQueries[modelName] ?? (savedQueries[modelName] = {});
+    savedQueriesForModel[newQueryName] = savedQueriesForModel[queryName];
     delete savedQueriesForModel[queryName];
     localStorage.setItem("savedQueries", JSON.stringify(savedQueries));
     show_savedQueries(modelName);
