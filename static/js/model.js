@@ -189,8 +189,10 @@ function model_fillGps(data) {
 
 function show_savedQueries(modelName) {
     $("#saved_queries").empty();
-    $("#saved_queries").append(get_saved_queries(modelName).sort().map((queryName) =>
-        $("<li class='saved_queries_query'>" + queryName + "</li>").prop("id", "saved_queries_query_" + queryName).click(e => 
+    $("#saved_queries").append(get_saved_queries(modelName).sort().map(([queryName, query]) =>
+        $("<li class='saved_queries_query'>" +
+            calc_finalQuery(query.preCondition, query.path, query.postCondition, query.linkFailures) +
+            " (" + queryName + ")" + "</li>").prop("id", "saved_queries_query_" + queryName).click(e => 
             set_saved_queries_query(modelName, queryName)
         )
     ));
@@ -229,7 +231,7 @@ function set_saved_queries_query(modelName, queryName) {
 function get_saved_queries(modelName) {
     const savedQueries = JSON.parse(localStorage.getItem("savedQueries") ?? "{}");
     const savedQueriesForModel = savedQueries[modelName] ?? (savedQueries[modelName] = {});
-    return Object.keys(savedQueriesForModel);
+    return Object.entries(savedQueriesForModel);
 }
 
 function save_query(modelName, queryName) {
@@ -252,6 +254,7 @@ function save_query(modelName, queryName) {
 
     localStorage.setItem("savedQueries", JSON.stringify(savedQueries));
 
+    show_queryExamples(model_data.queries);
     show_savedQueries(modelName);
 }
 
@@ -280,6 +283,7 @@ function delete_query(modelName, queryName) {
     let savedQueriesForModel = savedQueries[modelName] ?? (savedQueries[modelName] = {});
     delete savedQueriesForModel[queryName];
     localStorage.setItem("savedQueries", JSON.stringify(savedQueries));
+    show_queryExamples(model_data.queries);
     show_savedQueries(modelName);
 }
 
@@ -289,6 +293,7 @@ function rename_query(modelName, queryName, newQueryName) {
     savedQueriesForModel[newQueryName] = savedQueriesForModel[queryName];
     delete savedQueriesForModel[queryName];
     localStorage.setItem("savedQueries", JSON.stringify(savedQueries));
+    show_queryExamples(model_data.queries);
     show_savedQueries(modelName);
 }
 
@@ -415,28 +420,55 @@ function add_models(models) {
 function show_queryExamples(data) {
     $("#query-examples").empty();
     if (data) {
-        $("#query-examples").append($("<div>Examples:</div>"));
-        for (const query of data) {
-            $("#query-examples").append($("<div class='query-example'></div>").click(() => {
-                var query_parts = query.query.match("^<([^>]*)>\\s*([^<]*?)\\s*<([^>]*)>\\s*(\\d+)$");
-                if (query_parts) {
-                    $("#preCondition").val(query_parts[1]);
-                    $("#path").val(query_parts[2]);
-                    $("#postCondition").val(query_parts[3]);
-                    $("#linkFailures").val(query_parts[4]);
-                }
-                show_finalQuery();
-                //$("#query_entry form").submit();
-            }).text(query.query).attr("title", query.description));
+        if ((localStorage.getItem("examplesHidden") ?? "false") === "true") {
+            $("#query-examples").append($("<div>Examples hidden (click to show)</div>").click(() => {
+                localStorage.setItem("examplesHidden", "false");
+                show_queryExamples(data);
+            }));
+        } else {
+            $("#query-examples").append($("<div>Examples:</div>").click(() => {
+                localStorage.setItem("examplesHidden", "true");
+                show_queryExamples(data);
+            }));
+            for (const query of data) {
+                $("#query-examples").append($("<div class='query-example'></div>").click(() => {
+                    var query_parts = query.query.match("^<([^>]*)>\\s*([^<]*?)\\s*<([^>]*)>\\s*(\\d+)$");
+                    if (query_parts) {
+                        $("#preCondition").val(query_parts[1]);
+                        $("#path").val(query_parts[2]);
+                        $("#postCondition").val(query_parts[3]);
+                        $("#linkFailures").val(query_parts[4]);
+                    }
+                    show_finalQuery();
+                    //$("#query_entry form").submit();
+                }).text(query.query).attr("title", query.description));
+            }
         }
     }
+    const savedQueries = get_saved_queries(selected_model).sort();
+    if (savedQueries.length > 0) {
+        $("#query-examples").append($("<div>Saved Queries:</div>"));
+        for (const [queryName, query] of savedQueries) {
+            $("#query-examples").append($("<div class='query-example'></div>").click(() => {
+                load_query(selected_model, queryName);
+            }).text(calc_finalQuery(query.preCondition, query.path, query.postCondition, query.linkFailures)).attr("title", queryName));
+        }
+    }  
+}
+
+function calc_finalQuery(preCondition, path, postCondition, linkFailures) {
+    return '<' + preCondition + '> ' +
+    path +
+    ' <' + postCondition + '> ' +
+    linkFailures;
 }
 
 function show_finalQuery() {
-    var final_query = '<' + $('#preCondition').val() + '> ' +
-        $('#path').val() +
-        ' <' + $('#postCondition').val() + '> ' +
-        $('#linkFailures').val();
+    var final_query = calc_finalQuery(
+        $('#preCondition').val(),
+        $('#path').val(),
+        $('#postCondition').val(),
+        $('#linkFailures').val());
     $('#final_query').text(final_query);
     $("#query_entry .subheader").text(final_query);
 
