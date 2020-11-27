@@ -49,10 +49,22 @@ class Models {
         const topologyFile = path.join(this._modelsPath, name, 'topo.xml');
         const routingFile = path.join(this._modelsPath, name, 'routing.xml');
         const netFile = path.join(this._modelsPath, name, 'net.json');
+        let definitionFile = path.join(this._modelsPath, name, 'network.json');
+        try {
+            await fsp.access(definitionFile);
+        } catch (e) {
+            definitionFile = null;
+        }
         var stdout, stderr;
         try {
+            let parameters;
+            if (definitionFile) {
+                parameters = ['--input', definitionFile, '--net'];
+            } else {
+                parameters = ['--topology', topologyFile, '--routing', routingFile, '--net'];
+            }
             ({ stdout, stderr } = await execFile(path.join(this._binPath, 'aalwines'),
-                ['--topology', topologyFile, '--routing', routingFile, '--net'],
+            parameters,
                 { env: { MOPED_PATH: mopedPath }, maxBuffer: 100 * 1024 * 1024 }
             ));
         } catch (err) {
@@ -69,6 +81,7 @@ class Models {
     async augmentModel(name, network) {
         network = await this.augmentModelWithLocation(name, network);
         network = await this.augmentModelWithQueries(name, network);
+        network = await this.augmentModelWithDefinition(name, network);
         return network;
     }
 
@@ -101,14 +114,38 @@ class Models {
         return network;
     }
 
+    async augmentModelWithDefinition(name, network) {
+        const definitionFile = path.join(this._modelsPath, name, 'network.json');
+        let definitionFileContent;
+        try {
+            definitionFileContent = await fsp.readFile(definitionFile, 'utf8');
+        } catch(e) {
+            return network;
+        }
+        const definition = JSON.parse(definitionFileContent);
+        network.definition = definition;
+        return network;
+    }
+
     async doQuery(socket, model, query, options) {
         const mopedPath = path.join(this._binPath, 'moped');
         const topologyFile = path.join(this._modelsPath, model, 'topo.xml');
         const routingFile = path.join(this._modelsPath, model, 'routing.xml');
+        let definitionFile = path.join(this._modelsPath, model, 'network.json');
+        try {
+            await fsp.access(definitionFile);
+        } catch (e) {
+            definitionFile = null;
+        }
         var stdout, stderr;
         await tmp.withFile(async ({ path: tmpQueryFile }) => {
             await fsp.writeFile(tmpQueryFile, query);
-            let parameters = ['--topology', topologyFile, '--routing', routingFile, '-e', options.engine, '-r', options.reduction, '-t', '-q', tmpQueryFile];
+            let parameters;
+            if (definitionFile) {
+                parameters = ['--input', definitionFile, '-e', options.engine, '-r', options.reduction, '-t', '-q', tmpQueryFile];
+            } else {
+                parameters = ['--topology', topologyFile, '--routing', routingFile, '-e', options.engine, '-r', options.reduction, '-t', '-q', tmpQueryFile];
+            }
             await tmp.withFile(async ({ path: tmpWeightFile }) => {
                 if (options.weight) {
                     await fsp.writeFile(tmpWeightFile, JSON.stringify(options.weight));
