@@ -49,7 +49,7 @@
         <div class='inner-container'>
             <form enctype="multipart/form-data" method="post">
                 <p></p>
-                <div id="query-examples">
+                <div id="savedQueries">
                 </div>
                 <p>
                     <table>
@@ -69,11 +69,15 @@
                             <td><label for='linkFailures'>Max link failures: </label></td>
                             <td><input type='text' id='linkFailures' name='linkFailures' value='0'/></td>
                         </tr>
+                        <tr title="A textual description of the query.">
+                            <td><label for='description'>Description: </label></td>
+                            <td><input type='text' id='description' name='description' value=''/></td>
+                        </tr>
                     </table>
                 </p>
                 <p id='final_query'></p>
             </form>
-            <input id='open-load-save' type='button' value='Load / Save'/>
+            <input id='save-query' type='button' value='Save Query'/>
         </div>
     </div>
 
@@ -176,32 +180,6 @@
 </div>
 
 <div class="control-sidebar middle">
-    <div id="load_save" class="control-container">
-        <div class="header_noclick">Load / Save Queries and Options</div>
-        <div class='inner-container_always_expanded'>
-            <div class="saved_block">
-                Saved queries:
-                <ul id="saved_queries"></ul>
-            </div>
-            <div class="saved_block">
-            <input id='load-query' type='button' value='Load selected query'/>
-            <input id='delete-query' type='button' value='Delete selected query'/>
-            <input id='overwrite-query' type='button' value='Overwrite selected query'/>
-            </div>
-            <div class="saved_block">
-                <input id='rename-query' type='button' value='Rename selected query to:'/>
-                <input type='text' id='renameName' placeholder='newName'/>
-            </div>
-            <div class="saved_block">
-                <input id='save-query' type='button' value='Save query with name:'/>
-                <input type='text' id='saveName' placeholder='newName'/>
-            </div>
-            <div class="saved_block">
-                <input id='close-load-save' type='button' value='Close'/>
-            </div>
-            </div>
-    </div>
-
     <div id="router_list" class="control-container">
         <div class="header_noclick">Selection</div>
         <div class='inner-container_always_expanded'>

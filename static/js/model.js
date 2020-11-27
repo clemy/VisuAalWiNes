@@ -110,15 +110,8 @@ function model_init() {
     $("#add-interface-to-path").prop('disabled', true);
     $("#copy-interface-to-clipboard").prop('disabled', true);
     $("#add-label-to-header").prop('disabled', true);
-    $("#copy-label-to-clipboard").prop('disabled', true)
-
-    $("#open-load-save").prop('disabled', true).click(function () {
-        $("#load_save").toggle(200, set_sidebar_right_visibility);
-        set_sidebar_right_visibility();
-    });
-    $("#close-load-save").click(function () {
-        $("#load_save").hide(200, set_sidebar_right_visibility);
-    });
+    $("#copy-label-to-clipboard").prop('disabled', true);
+    $("#save-query").prop('disabled', true);
 }
 
 function load_model(data) {
@@ -126,13 +119,15 @@ function load_model(data) {
         return;
     }
     $("#run-validation").prop('disabled', false);
-    $("#open-load-save").prop('disabled', false);
     model_fillGps(data.data);
     model_data = data.data;
-    show_queryExamples(model_data.queries);
+    convert_queries(selected_model, model_data.queries);
     show_savedQueries(selected_model);
     show_routerList(model_data);
     show_simulation(model_data, true);
+    $("#save-query").prop('disabled', false).click(function () {
+        save_query(selected_model);
+    });
     $("#wait").hide(200);
 }
 
@@ -187,62 +182,86 @@ function model_fillGps(data) {
     );
 }
 
-function show_savedQueries(modelName) {
-    $("#saved_queries").empty();
-    $("#saved_queries").append(get_saved_queries(modelName).sort().map(([queryName, query]) =>
-        $("<li class='saved_queries_query'>" +
-            calc_finalQuery(query.preCondition, query.path, query.postCondition, query.linkFailures) +
-            " (" + queryName + ")" + "</li>").prop("id", "saved_queries_query_" + queryName).click(e => 
-            set_saved_queries_query(modelName, queryName)
-        )
-    ));
-    $("#load-query,#delete-query,#overwrite-query").prop('disabled', true);
-    $("#save-query").prop('disabled', false).off('click').click(e => {
-        const queryName = $('#saveName').val();
-        if (queryName) {
-            save_query(modelName, queryName);
-            set_saved_queries_query(modelName, queryName);
-        }
-    });
+function convert_queries(modelName, queryExamples) {
+    const savedQueries2 = JSON.parse(localStorage.getItem("savedQueries2") ?? "{}");
+    const savedQueries2ForModel = savedQueries2[modelName];
+    if (savedQueries2ForModel) {
+        return;
+    }
+
+    const savedQueries1 = JSON.parse(localStorage.getItem("savedQueries") ?? "{}");
+    const savedQueries1ForModel = savedQueries1[modelName];
+    if (savedQueries1ForModel) {
+        const newQueries = Object.entries(savedQueries1ForModel).map(([key, value]) => ({...value, description: key}));
+        savedQueries2[modelName] = newQueries;
+        localStorage.setItem("savedQueries2", JSON.stringify(savedQueries2));
+        return;
+    }
+
+    if (queryExamples) {
+        const newQueries = queryExamples.map(example => {
+            var query_parts = example.query.match("^<([^>]*)>\\s*([^<]*?)\\s*<([^>]*)>\\s*(\\d+)$");
+            return {
+                description: example.description,
+
+                preCondition: query_parts?.[1] ?? "",
+                path: query_parts?.[2] ?? "",
+                postCondition: query_parts?.[3] ?? "",
+                linkFailures: query_parts?.[4] ?? "",
+
+                engine: example.engine ?? "2",
+                sim_mode: example.sim_mode ?? "DUAL",
+                reduction: example.reduction ?? "3",
+                weights: example.weight ?? null
+            };
+        });
+        savedQueries2[modelName] = newQueries;
+        localStorage.setItem("savedQueries2", JSON.stringify(savedQueries2));
+    }
 }
 
-function set_saved_queries_query(modelName, queryName) {
-    $('.saved_queries_query').removeClass('selected');
-    document.getElementById('saved_queries_query_' + queryName).classList.add('selected');
-    $("#load-query").prop('disabled', false).off('click').click(e => {
-        load_query(modelName, queryName);
-    });
-    $("#delete-query").prop('disabled', false).off('click').click(e => {
-        delete_query(modelName, queryName);
-    });
-    $("#overwrite-query").prop('disabled', false).off('click').click(e => {
-        save_query(modelName, queryName);
-        set_saved_queries_query(modelName, queryName);
-    });
-    $("#rename-query").prop('disabled', false).off('click').click(e => {
-        const newQueryName = $('#renameName').val();
-        if (newQueryName) {
-            rename_query(modelName, queryName, newQueryName);
-            set_saved_queries_query(modelName, newQueryName);
-        }
-    });
+function show_savedQueries(modelName) {
+    $("#savedQueries").empty();
+
+    const savedQueries = get_saved_queries(modelName);
+    console.log(savedQueries);
+    if (savedQueries.length > 0) {
+        $("#savedQueries").append($("<div>Saved Queries:</div>"));
+        savedQueries.forEach((query, ix) => {
+            $("#savedQueries").append($("<div class='query-example'></div>")
+                .click(() => {
+                    load_query(modelName, ix);
+                })
+                .text(calc_finalQuery(query.preCondition, query.path, query.postCondition, query.linkFailures))
+                .attr("title", query.description)
+                .append($("<span class='delete'>x</span>")
+                    .click((ev) => {
+                        delete_query(modelName, ix);
+                        ev.stopPropagation();
+                    })
+                    .attr("title", "DELETE this query")
+                )
+            );
+        });
+    }  
 }
 
 function get_saved_queries(modelName) {
-    const savedQueries = JSON.parse(localStorage.getItem("savedQueries") ?? "{}");
-    const savedQueriesForModel = savedQueries[modelName] ?? (savedQueries[modelName] = {});
-    return Object.entries(savedQueriesForModel);
+    const savedQueries = JSON.parse(localStorage.getItem("savedQueries2") ?? "{}");
+    const savedQueriesForModel = savedQueries[modelName] ?? (savedQueries[modelName] = []);
+    return savedQueriesForModel;
 }
 
-function save_query(modelName, queryName) {
-    let savedQueries = JSON.parse(localStorage.getItem("savedQueries") ?? "{}");
-    let savedQueriesForModel = savedQueries[modelName] ?? (savedQueries[modelName] = {});
+function save_query(modelName) {
+    let savedQueries = JSON.parse(localStorage.getItem("savedQueries2") ?? "{}");
+    let savedQueriesForModel = savedQueries[modelName] ?? (savedQueries[modelName] = []);
 
     const data = {
         preCondition: $("#preCondition").val(),
         path: $("#path").val(),
         postCondition: $("#postCondition").val(),
         linkFailures: $("#linkFailures").val(),
+        description: $("#description").val(),
 
         engine: $("#engine").val(),
         sim_mode: $("#sim-mode").val(),
@@ -250,18 +269,17 @@ function save_query(modelName, queryName) {
 
         weights: getWeightList()
     };
-    savedQueriesForModel[queryName] = data;
+    savedQueriesForModel.push(data);
 
-    localStorage.setItem("savedQueries", JSON.stringify(savedQueries));
+    localStorage.setItem("savedQueries2", JSON.stringify(savedQueries));
 
-    show_queryExamples(model_data.queries);
     show_savedQueries(modelName);
 }
 
-function load_query(modelName, queryName) {
-    const savedQueries = JSON.parse(localStorage.getItem("savedQueries") ?? "{}");
-    const savedQueriesForModel = savedQueries[modelName] ?? (savedQueries[modelName] = {});
-    const savedQuery = savedQueriesForModel[queryName];
+function load_query(modelName, queryIx) {
+    const savedQueries = JSON.parse(localStorage.getItem("savedQueries2") ?? "{}");
+    const savedQueriesForModel = savedQueries[modelName] ?? (savedQueries[modelName] = []);
+    const savedQuery = savedQueriesForModel[queryIx];
     if (savedQuery) {
         $("#preCondition").val(savedQuery.preCondition);
         $("#path").val(savedQuery.path);
@@ -272,28 +290,19 @@ function load_query(modelName, queryName) {
         $("#sim-mode").val(savedQuery.sim_mode);
         $("#reduction").val(savedQuery.reduction);
 
+        $("#description").val(savedQuery.description);
+
         restoreWeightList(savedQuery.weights);
 
         show_finalQuery();
     }
 }
 
-function delete_query(modelName, queryName) {
-    let savedQueries = JSON.parse(localStorage.getItem("savedQueries") ?? "{}");
-    let savedQueriesForModel = savedQueries[modelName] ?? (savedQueries[modelName] = {});
-    delete savedQueriesForModel[queryName];
-    localStorage.setItem("savedQueries", JSON.stringify(savedQueries));
-    show_queryExamples(model_data.queries);
-    show_savedQueries(modelName);
-}
-
-function rename_query(modelName, queryName, newQueryName) {
-    let savedQueries = JSON.parse(localStorage.getItem("savedQueries") ?? "{}");
-    let savedQueriesForModel = savedQueries[modelName] ?? (savedQueries[modelName] = {});
-    savedQueriesForModel[newQueryName] = savedQueriesForModel[queryName];
-    delete savedQueriesForModel[queryName];
-    localStorage.setItem("savedQueries", JSON.stringify(savedQueries));
-    show_queryExamples(model_data.queries);
+function delete_query(modelName, queryIx) {
+    let savedQueries = JSON.parse(localStorage.getItem("savedQueries2") ?? "{}");
+    let savedQueriesForModel = savedQueries[modelName] ?? (savedQueries[modelName] = []);
+    savedQueriesForModel.splice(queryIx, 1);
+    localStorage.setItem("savedQueries2", JSON.stringify(savedQueries));
     show_savedQueries(modelName);
 }
 
@@ -415,45 +424,6 @@ function add_models(models) {
         data += ">" + models[i] + "</option>";
     }
     $("#model").html(data);
-}
-
-function show_queryExamples(data) {
-    $("#query-examples").empty();
-    if (data) {
-        if ((localStorage.getItem("examplesHidden") ?? "false") === "true") {
-            $("#query-examples").append($("<div>Examples hidden (click to show)</div>").click(() => {
-                localStorage.setItem("examplesHidden", "false");
-                show_queryExamples(data);
-            }));
-        } else {
-            $("#query-examples").append($("<div>Examples:</div>").click(() => {
-                localStorage.setItem("examplesHidden", "true");
-                show_queryExamples(data);
-            }));
-            for (const query of data) {
-                $("#query-examples").append($("<div class='query-example'></div>").click(() => {
-                    var query_parts = query.query.match("^<([^>]*)>\\s*([^<]*?)\\s*<([^>]*)>\\s*(\\d+)$");
-                    if (query_parts) {
-                        $("#preCondition").val(query_parts[1]);
-                        $("#path").val(query_parts[2]);
-                        $("#postCondition").val(query_parts[3]);
-                        $("#linkFailures").val(query_parts[4]);
-                    }
-                    show_finalQuery();
-                    //$("#query_entry form").submit();
-                }).text(query.query).attr("title", query.description));
-            }
-        }
-    }
-    const savedQueries = get_saved_queries(selected_model).sort();
-    if (savedQueries.length > 0) {
-        $("#query-examples").append($("<div>Saved Queries:</div>"));
-        for (const [queryName, query] of savedQueries) {
-            $("#query-examples").append($("<div class='query-example'></div>").click(() => {
-                load_query(selected_model, queryName);
-            }).text(calc_finalQuery(query.preCondition, query.path, query.postCondition, query.linkFailures)).attr("title", queryName));
-        }
-    }  
 }
 
 function calc_finalQuery(preCondition, path, postCondition, linkFailures) {
