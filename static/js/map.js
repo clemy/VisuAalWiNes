@@ -180,19 +180,27 @@ function show_simulation(data, doZoom) {
     update_deck();
 
     if (doZoom) {
-        const bounds = [[data.minLng, data.minLat], [data.maxLng, data.maxLat]];
-        const {viewport} = layerRouter.context;
-        const {longitude, latitude, zoom} = viewport.fitBounds(bounds);
-        currentViewState = Object.assign({}, currentViewState, {
-            longitude,
-            latitude,
-            zoom: zoom - 1,
-            bearing: top_down ? 0 : -32,
-            pitch: top_down ? 0 : 40,
-            transitionDuration: 3000,
-            transitionInterpolator: new deck.FlyToInterpolator()
-        });
-        deckgl.setProps({viewState: currentViewState});
+        const zoomFn = () => {
+            if (!layerRouter.context) {
+                // delay on load until map is loaded
+                setTimeout(zoomFn, 100);
+                return;
+            }
+            const bounds = [[data.minLng, data.minLat], [data.maxLng, data.maxLat]];
+            const {viewport} = layerRouter.context;
+            const {longitude, latitude, zoom} = viewport.fitBounds(bounds);
+            currentViewState = Object.assign({}, currentViewState, {
+                longitude,
+                latitude,
+                zoom: zoom - 1,
+                bearing: top_down ? 0 : -32,
+                pitch: top_down ? 0 : 40,
+                transitionDuration: 3000,
+                transitionInterpolator: new deck.FlyToInterpolator()
+            });
+            deckgl.setProps({viewState: currentViewState});
+        };
+        zoomFn();
     }
     current_step = -1;
     usedEdgesCount = usedEdges.length;
