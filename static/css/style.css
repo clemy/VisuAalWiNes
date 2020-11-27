@@ -130,7 +130,7 @@ body {
 
 #video_placeholder {
     box-sizing: border-box;
-    min-height: 235px;
+    min-height: 245px;
     padding: 20px 0px 0px 63px;
     font-size: large;
 }
@@ -138,7 +138,7 @@ body {
 #video {
     border: 1px solid #005c9b;
     position: absolute;
-    top: 265px;
+    top: 280px;
     right: 25px;
     display: none;
 }
