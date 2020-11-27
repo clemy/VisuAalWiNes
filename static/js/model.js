@@ -112,6 +112,18 @@ function model_init() {
     $("#add-label-to-header").prop('disabled', true);
     $("#copy-label-to-clipboard").prop('disabled', true);
     $("#save-query").prop('disabled', true);
+    $("#file-selector").prop('disabled', true);
+    $("#upload").prop('disabled', true);
+    $("#download").prop('disabled', true);
+    $("#downloadall").prop('disabled', true);
+}
+
+function download(content, fileName, contentType) {
+    var a = document.createElement("a");
+    var file = new Blob([content], {type: contentType});
+    a.href = URL.createObjectURL(file);
+    a.download = fileName;
+    a.click();
 }
 
 function load_model(data) {
@@ -127,6 +139,31 @@ function load_model(data) {
     show_simulation(model_data, true);
     $("#save-query").prop('disabled', false).click(function () {
         save_query(selected_model);
+    });
+    $("#file-selector").prop('disabled', false);
+    $("#upload").prop('disabled', false).click(function () {
+        const file = $("#file-selector")[0].files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.addEventListener('load', (event) => {
+                const queries = JSON.parse(event.target.result).queries;
+                const savedQueries = JSON.parse(localStorage.getItem("savedQueries2") ?? "{}");
+                savedQueries[selected_model] = queries;
+                localStorage.setItem("savedQueries2", JSON.stringify(savedQueries));
+                show_savedQueries(selected_model);
+            });
+            reader.readAsText(file);
+        }
+    });
+    $("#download").prop('disabled', false).click(function () {
+        const savedQueries = get_saved_queries(selected_model);
+        const data = JSON.stringify({ name: selected_model, queries: savedQueries });
+        download(data, selected_model + "-queries.json", "application/json");
+    });
+    $("#downloadall").prop('disabled', false).click(function () {
+        const savedQueries = get_saved_queries(selected_model);
+        const data = JSON.stringify({ name: selected_model, ...model_data.definition, queries: savedQueries });
+        download(data, selected_model + ".json", "application/json");
     });
     $("#wait").hide(200);
 }
@@ -224,7 +261,6 @@ function show_savedQueries(modelName) {
     $("#savedQueries").empty();
 
     const savedQueries = get_saved_queries(modelName);
-    console.log(savedQueries);
     if (savedQueries.length > 0) {
         $("#savedQueries").append($("<div>Saved Queries:</div>"));
         savedQueries.forEach((query, ix) => {
