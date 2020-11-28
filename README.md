@@ -73,7 +73,7 @@ cd visuaalwines-0.3.0
 # browse to http://localhost:3000/
 ```
 
-Own sample data can be added in the directory `data/models`.
+Own sample data can be added in the directory `data/models` or via the web interface.
 
 ## Optional Requirements
 
