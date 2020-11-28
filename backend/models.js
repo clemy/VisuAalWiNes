@@ -47,17 +47,10 @@ class Models {
     }
     
     async uploadModel(data) {
-        if (DISABLE_UPLOAD)
+        if (DISABLE_UPLOAD) {
             throw "Uploads not allowed on this Server.";
-        const baseName = data.name ?? data.network.name ?? "Upload";
-        let name = baseName;
-        let i = 1;
-        // find a free name
-        while (this._models.includes(name)) {
-            name = `${baseName}_${i++}`;
         }
-        const {name:_ , queries, ...definition} = data;
-        console.log(definition);
+        let {name:baseName, queries, ...definition} = data;
         if (!definition.network) {
             throw "Model is not complete - missing network.";
         }
@@ -66,6 +59,18 @@ class Models {
         }
         if (!definition.network.routers) {
             throw "Model is not complete - missing routers.";
+        }
+        if (!baseName) {
+            baseName = data.network.name;
+        }
+        if (!baseName) {
+            baseName = "Upload";
+        }
+        let name = baseName;
+        let i = 1;
+        // find a free name
+        while (this._models.includes(name)) {
+            name = `${baseName}_${i++}`;
         }
         await fsp.mkdir(path.join(this._modelsPath, name));
         fsp.writeFile(path.join(this._modelsPath, name, 'network.json'), JSON.stringify(definition));
