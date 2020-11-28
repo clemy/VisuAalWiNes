@@ -220,15 +220,15 @@ function load_model(data) {
     show_savedQueries(selected_model);
     show_routerList(model_data);
     show_simulation(model_data, true);
-    $("#save-query").prop('disabled', false).click(function () {
+    $("#save-query").prop('disabled', false).off('click').click(function () {
         save_query(selected_model);
     });
-    $("#download").prop('disabled', false).click(function () {
+    $("#download").prop('disabled', false).off('click').click(function () {
         const savedQueries = get_saved_queries(selected_model);
         const data = JSON.stringify({ name: selected_model, queries: savedQueries });
         download(data, selected_model + "-queries.json", "application/json");
     });
-    $("#downloadall").prop('disabled', false).click(function () {
+    $("#downloadall").prop('disabled', false).off('click').click(function () {
         const savedQueries = get_saved_queries(selected_model);
         const data = JSON.stringify({ name: selected_model, ...model_data.definition, queries: savedQueries });
         download(data, selected_model + ".json", "application/json");
