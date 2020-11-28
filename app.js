@@ -5,7 +5,7 @@ const http = require('http').createServer(app);
 const io = require('socket.io')(http);
 
 console.log('VisuAalWiNes - Visualization for AaalWiNes');
-console.log('  Version 0.2.0');
+console.log('  Version 0.3.0');
 
 const modelsPath = path.join(process.cwd(), 'data', 'models');
 const binPath = path.join(process.cwd(), 'bin');
