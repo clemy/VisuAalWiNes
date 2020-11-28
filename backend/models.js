@@ -5,6 +5,8 @@ const execFile = util.promisify(require('child_process').execFile);
 const path = require('path');
 const tmp = require('tmp-promise');
 
+const DISABLE_UPLOAD = false;
+
 class Models {
     constructor(modelsPath, binPath, cb) {
         this._modelsPath = modelsPath;
@@ -42,6 +44,36 @@ class Models {
             network = await this.calculateModel(name);
         }
         return await this.augmentModel(name, JSON.parse(network));
+    }
+    
+    async uploadModel(data) {
+        if (DISABLE_UPLOAD)
+            throw "Uploads not allowed on this Server.";
+        const baseName = data.name ?? data.network.name ?? "Upload";
+        let name = baseName;
+        let i = 1;
+        // find a free name
+        while (this._models.includes(name)) {
+            name = `${baseName}_${i++}`;
+        }
+        const {name:_ , queries, ...definition} = data;
+        console.log(definition);
+        if (!definition.network) {
+            throw "Model is not complete - missing network.";
+        }
+        if (!definition.network.links) {
+            throw "Model is not complete - missing links.";
+        }
+        if (!definition.network.routers) {
+            throw "Model is not complete - missing routers.";
+        }
+        await fsp.mkdir(path.join(this._modelsPath, name));
+        fsp.writeFile(path.join(this._modelsPath, name, 'network.json'), JSON.stringify(definition));
+        if (queries) {
+            fsp.writeFile(path.join(this._modelsPath, name, 'queries.json'), JSON.stringify(queries));
+        }
+
+        return [name, await this.loadModel(name)];
     }
 
     async calculateModel(name) {

@@ -1,8 +1,10 @@
 let selected_model;
-let model_data;
+let model_data = null;
 let result_data = null;
 let view_interface_names = false;
 let labelTarget;
+
+const DISABLE_UPLOAD = false;
 
 function model_init() {
     $("#model_selection form").prop("onclick", null).off("submit");
@@ -112,10 +114,61 @@ function model_init() {
     $("#add-label-to-header").prop('disabled', true);
     $("#copy-label-to-clipboard").prop('disabled', true);
     $("#save-query").prop('disabled', true);
-    $("#file-selector").prop('disabled', true);
-    $("#upload").prop('disabled', true);
+    $("#upload").prop('disabled', true).click(function () {
+        uploadFile(false);
+    });
+    $("#uploadall").prop('disabled', true);
+    if (DISABLE_UPLOAD) {
+        $("#uploadall").prop("title", "Disabled for this Server.");
+    } else {
+        $("#uploadall").click(function () {
+            uploadFile(true);
+        });
+    }
     $("#download").prop('disabled', true);
     $("#downloadall").prop('disabled', true);
+    $("#file-selector").change(function () {
+        checkUploadButtonDisabledProp();
+    });
+}
+
+function uploadFile(toServer) {
+    const file = $("#file-selector")[0].files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.addEventListener('load', (event) => {
+            const content = JSON.parse(event.target.result);
+            if (toServer) {
+                $("#wait").show(200);
+                socket.emit("uploadModel", content);
+            } else {
+                const queries = content.queries;
+                const savedQueries = JSON.parse(localStorage.getItem("savedQueries2") ?? "{}");
+                savedQueries[selected_model] = queries;
+                localStorage.setItem("savedQueries2", JSON.stringify(savedQueries));
+                show_savedQueries(selected_model);
+            }
+        });
+        reader.readAsText(file);
+        $("#file-selector").val(null);
+        checkUploadButtonDisabledProp();
+        $("#queryresult").empty();
+    }
+}
+
+function checkUploadButtonDisabledProp() {
+    const file = $("#file-selector")[0].files[0];
+    if (file) {
+        if (model_data) {
+            $("#upload").prop('disabled', false);
+        }
+        if (!DISABLE_UPLOAD) {
+            $("#uploadall").prop('disabled', false);
+        }
+    } else {
+        $("#upload").prop('disabled', true);
+        $("#uploadall").prop('disabled', true);
+    }
 }
 
 function download(content, fileName, contentType) {
@@ -126,6 +179,35 @@ function download(content, fileName, contentType) {
     a.click();
 }
 
+function load_model_afterUpload(data) {
+    $("#wait").hide(200);
+    if (data.error === undefined) {
+        selected_model = data.name;
+        $("#model_selection .subheader").text(selected_model);
+        $("#preCondition").val('.');
+        $("#path").val('.*');
+        $("#postCondition").val('.');
+        $("#linkFailures").val('0');
+        $("#result_query_string").text('');
+        result_data = null;
+        $("#queryresult").text('');
+        $("#query_result .subheader").text('');
+        show_finalQuery();
+        $("#model_selection").children(".expand-icon").click();
+        if ($("#query_entry").children(".expand-icon").text() == '+') {
+            $("#query_entry").children(".expand-icon").click();
+        }        
+        load_model(data);
+    } else {
+        if ($("#query_result").children(".expand-icon").text() == '+') {
+            $("#query_result").children(".expand-icon").click();
+        }
+        $("#queryresult").empty();
+        $("#queryresult").append($("<p></p>").text(data.error));
+        $("#rawresult").text(data.error);
+    }
+}
+
 function load_model(data) {
     if (selected_model !== data.name) {
         return;
@@ -133,27 +215,13 @@ function load_model(data) {
     $("#run-validation").prop('disabled', false);
     model_fillGps(data.data);
     model_data = data.data;
+    checkUploadButtonDisabledProp();
     convert_queries(selected_model, model_data.queries);
     show_savedQueries(selected_model);
     show_routerList(model_data);
     show_simulation(model_data, true);
     $("#save-query").prop('disabled', false).click(function () {
         save_query(selected_model);
-    });
-    $("#file-selector").prop('disabled', false);
-    $("#upload").prop('disabled', false).click(function () {
-        const file = $("#file-selector")[0].files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.addEventListener('load', (event) => {
-                const queries = JSON.parse(event.target.result).queries;
-                const savedQueries = JSON.parse(localStorage.getItem("savedQueries2") ?? "{}");
-                savedQueries[selected_model] = queries;
-                localStorage.setItem("savedQueries2", JSON.stringify(savedQueries));
-                show_savedQueries(selected_model);
-            });
-            reader.readAsText(file);
-        }
     });
     $("#download").prop('disabled', false).click(function () {
         const savedQueries = get_saved_queries(selected_model);
@@ -237,14 +305,16 @@ function convert_queries(modelName, queryExamples) {
 
     if (queryExamples) {
         const newQueries = queryExamples.map(example => {
-            var query_parts = example.query.match("^<([^>]*)>\\s*([^<]*?)\\s*<([^>]*)>\\s*(\\d+)$");
+            if (example.query) {
+                var query_parts = example.query.match("^<([^>]*)>\\s*([^<]*?)\\s*<([^>]*)>\\s*(\\d+)$");
+            }
             return {
-                description: example.description,
+                description: example.description ?? "",
 
-                preCondition: query_parts?.[1] ?? "",
-                path: query_parts?.[2] ?? "",
-                postCondition: query_parts?.[3] ?? "",
-                linkFailures: query_parts?.[4] ?? "",
+                preCondition: example.preCondition ?? query_parts?.[1] ?? "",
+                path: example.path ?? query_parts?.[2] ?? "",
+                postCondition: example.postCondition ?? query_parts?.[3] ?? "",
+                linkFailures: example.linkFailures ?? query_parts?.[4] ?? "",
 
                 engine: example.engine ?? "2",
                 sim_mode: example.sim_mode ?? "DUAL",

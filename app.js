@@ -35,6 +35,14 @@ io.on('connect', (socket) => {
     socket.on('cancelQuery', async () => {
         models.cancelQuery(socket);
     });
+    socket.on('uploadModel', async (data) => {
+        try {
+            const [name, modelData] = await models.uploadModel(data);
+            socket.emit('modelDataAfterUpload', { name: name, data: modelData });
+        } catch (err) {
+            socket.emit('modelDataAfterUpload', { error: err.toString() });
+        }
+    });
 
     socket.emit('models', models.models);
 });
